@@ -3,10 +3,18 @@ import java.sql.*;
 import javax.swing.*;
 
 import javax.swing.JFrame;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Canvas;
 
 public class Login {
 
@@ -31,6 +39,9 @@ public class Login {
 	Connection connection = null;
 	private JTextField textFieldUN;
 	private JPasswordField passwordField;
+	private JLabel lblNewLabel_2;
+	private JLabel lblSignInTo;
+	private JLabel lblSignInTo_1;
 	
 	/**
 	 * Create the application.
@@ -47,32 +58,36 @@ public class Login {
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setForeground(new Color(240, 248, 255));
-		frame.getContentPane().setBackground(new Color(0, 0, 139));
-		frame.setBounds(100, 100, 633, 394);
+		frame.getContentPane().setBackground(new Color(0, 1, 32));
+		frame.setBounds(100, 100, 1400, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Username");
 		lblNewLabel.setForeground(new Color(240, 255, 255));
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblNewLabel.setBounds(102, 52, 146, 20);
+		lblNewLabel.setBounds(481, 310, 146, 20);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Password");
 		lblNewLabel_1.setForeground(new Color(240, 248, 255));
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblNewLabel_1.setBounds(102, 87, 129, 20);
+		lblNewLabel_1.setBounds(486, 379, 129, 20);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		textFieldUN = new JTextField();
-		textFieldUN.setBounds(211, 49, 146, 26);
+		textFieldUN.setBounds(642, 310, 146, 26);
 		frame.getContentPane().add(textFieldUN);
 		textFieldUN.setColumns(10);
 		
-		JButton btnNewButton = new JButton("Login");
-		btnNewButton.setBackground(new Color(240, 248, 255));
-		btnNewButton.setForeground(new Color(0, 0, 0));
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		JButton btnNewButton = new JButton("Sign In");
+		btnNewButton.setBorder(new EmptyBorder(20,20,20,20));
+		btnNewButton.setBackground(new Color(0, 0, 70));
+		btnNewButton.setForeground(new Color(1, 159, 254));
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 28));
+		//btnNewButton.setOpaque(false);
+		//btnNewButton.setContentAreaFilled(false);
+		btnNewButton.setBorderPainted(false);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -108,11 +123,35 @@ public class Login {
 				
 			}
 		});
-		btnNewButton.setBounds(242, 162, 146, 42);
+		btnNewButton.setBounds(642, 499, 146, 46);
 		frame.getContentPane().add(btnNewButton);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(211, 84, 146, 26);
+		passwordField.setBounds(642, 379, 146, 26);
 		frame.getContentPane().add(passwordField);
+		
+		ImageIcon imageIcon = new ImageIcon(new ImageIcon("4k-gif-wallpaper.gif").getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT));
+		lblNewLabel_2 = new JLabel(imageIcon);
+		lblNewLabel_2.setBounds(1125, 510, 205, 191);
+		frame.getContentPane().add(lblNewLabel_2);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(349, 249, 700, 337);
+		panel.setBackground(new Color(255, 255, 255, 10));
+		panel.setBorder(new EmptyBorder(15,15,15,15));
+		frame.getContentPane().add(panel);
+		
+		lblSignInTo_1 = new JLabel("Sign In to Kipling");
+		//lblSignInTo_1.setForeground(new Color(255, 255, 0));
+		lblSignInTo_1.setBounds(562, 114, 351, 93);
+		lblSignInTo_1.setBackground(new Color(0, 0, 0));
+		lblSignInTo_1.setForeground(new Color(1, 159, 254));
+		lblSignInTo_1.setFont(new Font("Tahoma", Font.BOLD, 32));
+		lblSignInTo_1.setOpaque(false);
+		frame.getContentPane().add(lblSignInTo_1);
+		
+		
+
+		
 	}
 }
