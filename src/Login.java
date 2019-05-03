@@ -65,17 +65,18 @@ public class Login {
 		
 		JLabel lblNewLabel = new JLabel("Username");
 		lblNewLabel.setForeground(new Color(240, 255, 255));
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		lblNewLabel.setBounds(481, 310, 146, 20);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Password");
 		lblNewLabel_1.setForeground(new Color(240, 248, 255));
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		lblNewLabel_1.setBounds(486, 379, 129, 20);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		textFieldUN = new JTextField();
+		textFieldUN.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		textFieldUN.setBounds(642, 310, 146, 26);
 		frame.getContentPane().add(textFieldUN);
 		textFieldUN.setColumns(10);
@@ -127,6 +128,7 @@ public class Login {
 		frame.getContentPane().add(btnNewButton);
 		
 		passwordField = new JPasswordField();
+		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		passwordField.setBounds(642, 379, 146, 26);
 		frame.getContentPane().add(passwordField);
 		
