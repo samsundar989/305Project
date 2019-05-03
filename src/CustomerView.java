@@ -32,6 +32,7 @@ public class CustomerView extends JFrame {
 			public void run() {
 				try {
 					CustomerView frame = new CustomerView();
+					frame.setTitle("Kipling");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -59,6 +60,7 @@ public class CustomerView extends JFrame {
 		lblCustomer.setForeground(Color.WHITE);
 		lblCustomer.setBounds(195, 236, 69, 20);
 		contentPane.add(lblCustomer);
+
 		setBounds(100, 100, 1400, 800);
 	}
 }

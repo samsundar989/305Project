@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -35,6 +37,8 @@ public class Login {
 			}
 		});
 	}
+	
+	
 
 	Connection connection = null;
 	private JTextField textFieldUN;
@@ -56,7 +60,7 @@ public class Login {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
+		frame = new JFrame("Kipling");
 		frame.getContentPane().setForeground(new Color(240, 248, 255));
 		frame.getContentPane().setBackground(new Color(0, 1, 32));
 		frame.setBounds(100, 100, 1400, 800);
@@ -86,8 +90,6 @@ public class Login {
 		btnNewButton.setBackground(new Color(0, 0, 70));
 		btnNewButton.setForeground(new Color(1, 159, 254));
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 28));
-		//btnNewButton.setOpaque(false);
-		//btnNewButton.setContentAreaFilled(false);
 		btnNewButton.setBorderPainted(false);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -151,13 +153,34 @@ public class Login {
 		frame.getContentPane().add(panel);
 		
 		lblSignInTo_1 = new JLabel("Sign In to Kipling");
-		//lblSignInTo_1.setForeground(new Color(255, 255, 0));
 		lblSignInTo_1.setBounds(562, 114, 351, 93);
 		lblSignInTo_1.setBackground(new Color(0, 0, 0));
 		lblSignInTo_1.setForeground(new Color(1, 159, 254));
 		lblSignInTo_1.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblSignInTo_1.setOpaque(false);
 		frame.getContentPane().add(lblSignInTo_1);
+		
+		JButton btnYouCanSign = new JButton("You can sign up here!");
+		btnYouCanSign.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					RegisterDialog rd = new RegisterDialog();
+					rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		            rd.setVisible(true);
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnYouCanSign.setForeground(new Color(1, 159, 254));
+		btnYouCanSign.setFont(new Font("Tahoma", Font.BOLD, 28));
+		btnYouCanSign.setBorderPainted(false);
+		btnYouCanSign.setBorder(new EmptyBorder(20,20,20,20));
+		btnYouCanSign.setBackground(new Color(0, 0, 70));
+		btnYouCanSign.setBounds(534, 667, 365, 46);
+		frame.getContentPane().add(btnYouCanSign);
 		
 		
 

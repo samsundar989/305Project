@@ -32,6 +32,7 @@ public class SellerView extends JFrame {
 			public void run() {
 				try {
 					SellerView frame = new SellerView();
+					frame.setTitle("Kipling");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -37,6 +37,7 @@ public class AdminView extends JFrame {
 			public void run() {
 				try {
 					AdminView frame = new AdminView();
+					frame.setTitle("Kipling");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,6 +62,7 @@ public class AdminView extends JFrame {
 		contentPane.setForeground(new Color(240, 248, 255));
 		contentPane.setBackground(new Color(0, 1, 32));
 		setBounds(100, 100, 1400, 800);
+		
 		
 		JButton btnLoadTable = new JButton("Load Table");
 		btnLoadTable.setFont(new Font("Tahoma", Font.PLAIN, 24));
@@ -142,7 +144,14 @@ public class AdminView extends JFrame {
 		Panel panelSearch = new Panel();
 		panelSearch.setBounds(10, 37, 203, 35);
 		p1.add(panelSearch);
+		
+		JTextField textFieldTemp = RowFilterUtil.createRowFilter(table);
+		
+		panelSearch.add(textFieldTemp);
+		textFieldTemp.setSize(150, 30);
+		
 		contentPane.add(tabbedPane);
+		
 		
 		
 		btnLoadTable.addActionListener(new ActionListener() {
