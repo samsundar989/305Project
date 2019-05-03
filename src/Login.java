@@ -99,17 +99,24 @@ public class Login {
 					
 					ResultSet rs = pst.executeQuery();
 					int count = 0;
+					String view = "";
 					while(rs.next()) {
+						view = rs.getString(3);
 						count = count+1;
 					}
 					
 					if(count == 1) {
-						//JOptionPane.showMessageDialog(null, "Username and password is correct");
 						frame.dispose();
-						AdminView av = new AdminView();
-						av.setVisible(true);
-					}else if(count >1) {
-						JOptionPane.showMessageDialog(null, "Duplicate username and password");
+						if(view.equals("admin")) {
+							AdminView av = new AdminView();
+							av.setVisible(true);
+						}else if(view.equals("seller")) {
+							SellerView av = new SellerView();
+							av.setVisible(true);
+						}else {
+							CustomerView av = new CustomerView();
+							av.setVisible(true);
+						}
 					}else {
 						JOptionPane.showMessageDialog(null, "Username or/amd password incorrect");
 					}
