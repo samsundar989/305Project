@@ -66,7 +66,7 @@ public class AdminView extends JFrame {
 		
 		JButton btnLoadTable = new JButton("Load Table");
 		btnLoadTable.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		btnLoadTable.setBounds(521, 37, 163, 36);
+		btnLoadTable.setBounds(305, 37, 163, 36);
 		//contentPane.add(btnLoadTable);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -106,7 +106,7 @@ public class AdminView extends JFrame {
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		comboBox.setBounds(236, 38, 270, 35);
+		comboBox.setBounds(15, 38, 270, 35);
 		comboBox.addItem("employee");
 		comboBox.addItem("customer");
 		comboBox.addItem("seller");
@@ -115,12 +115,8 @@ public class AdminView extends JFrame {
 		p1.add(comboBox);
 		
 		JButton btnRemmove = new JButton("Remove Row");
-		btnRemmove.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		btnRemmove.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		btnRemmove.setBounds(723, 37, 174, 36);
+		btnRemmove.setBounds(485, 37, 174, 36);
 		p1.add(btnRemmove);
 
 		p1.setBackground(new Color(0, 1, 32));
@@ -128,42 +124,95 @@ public class AdminView extends JFrame {
 		tabbedPane.setBackground(new Color(0, 1, 32));
 		
 		JButton btnAdd = new JButton("Add Row");
+		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		btnAdd.setBounds(674, 37, 129, 36);
+		p1.add(btnAdd);
+		
+		JTextField textFieldTemp = RowFilterUtil.createRowFilter(table);
+		
+		JLabel lblSearch = new JLabel("Search");
+		lblSearch.setFont(new Font("Tahoma", Font.BOLD, 22));
+		lblSearch.setForeground(Color.WHITE);
+		lblSearch.setBounds(1016, 16, 129, 20);
+		p1.add(lblSearch);
+		
+		Panel panelSearch = new Panel();
+		panelSearch.setBounds(1004, 38, 206, 46);
+		p1.add(panelSearch);
+		
+		panelSearch.add(textFieldTemp);
+		
+		JButton btnSaveRow = new JButton("Save Row");
+		btnSaveRow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnSaveRow.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		btnSaveRow.setBounds(818, 37, 154, 36);
+		p1.add(btnSaveRow);
+		textFieldTemp.setSize(150, 30);
+		
+		contentPane.add(tabbedPane);
+		
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					DefaultTableModel m = (DefaultTableModel) table.getModel();
+					Vector row = new Vector();
+					for(int i = 0; i < table.getColumnCount(); i++) {
+						row.add("Enter data");
+					}
+					m.addRow(row);
+					m.fireTableDataChanged();
 					
 				}catch (Exception ex) {
 					
 				}
 			}
 		});
-		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		btnAdd.setBounds(924, 37, 187, 36);
-		p1.add(btnAdd);
 		
-		Panel panelSearch = new Panel();
-		panelSearch.setBounds(10, 37, 203, 35);
-		p1.add(panelSearch);
-		
-		JTextField textFieldTemp = RowFilterUtil.createRowFilter(table);
-		
-		panelSearch.add(textFieldTemp);
-		textFieldTemp.setSize(150, 30);
-		
-		contentPane.add(tabbedPane);
-		
-		
-		
-		btnLoadTable.addActionListener(new ActionListener() {
+		btnSaveRow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					p1.removeAll();
+					Statement stmt = connection.createStatement();
+				    String sql = "INSERT INTO mydb."+comboBox.getSelectedItem().toString();
+					sql+=" VALUES ('"+table.getValueAt(table.getSelectedRow(), 0)+"'";
+					for(int i = 1; i < table.getColumnCount(); i++) {
+						sql+=", '"+table.getValueAt(table.getSelectedRow(), i)+"'";
+					}
+					sql+=");";
+					stmt.executeUpdate(sql);
+					table.clearSelection();
+				}catch (Exception ex) {
+					
+				}
+			}
+		});
+		
+		btnRemmove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Statement stmt = connection.createStatement();
+					String sql = "DELETE FROM mydb."+comboBox.getSelectedItem().toString();
+					sql+=" WHERE ";
+					sql+=table.getColumnName(0)+" = '"+table.getValueAt(table.getSelectedRow(), 0)+"'";
+					for(int i = 1; i < table.getColumnCount(); i++) {
+						sql+=" AND "+table.getColumnName(i)+" = '"+table.getValueAt(table.getSelectedRow(), i)+"'";
+					}
+					//System.out.println(sql);
+				    stmt.executeUpdate(sql);
+				    
+				    
+				    // redraw table
+				    p1.removeAll();
 					p1.add(btnRemmove);
 					p1.add(btnAdd);
 					p1.add(btnLoadTable);
 					p1.add(scrollPane);
 					p1.add(comboBox);
 					p1.add(panelSearch);
+					p1.add(lblSearch);
+					p1.add(btnSaveRow);
 					
 					String query = "select * from mydb.";
 					query = query+comboBox.getSelectedItem().toString();
@@ -177,10 +226,51 @@ public class AdminView extends JFrame {
 					panelSearch.removeAll();
 					panelSearch.revalidate();
 					panelSearch.repaint();
-					panelSearch.add(textField);
 					textField.setSize(150, 30);
-					//p1.add(textField);
-					textField.setColumns(10);
+					panelSearch.add(textField);
+					
+					p1.revalidate();
+					p1.repaint();
+				    
+				    
+				    
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					if(e instanceof SQLException){
+						System.out.println("Key constraint is violated");
+					}
+					System.out.println("Choose table and row");
+				}
+			}
+		});
+		
+		btnLoadTable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					p1.removeAll();
+					p1.add(btnRemmove);
+					p1.add(btnAdd);
+					p1.add(btnLoadTable);
+					p1.add(scrollPane);
+					p1.add(comboBox);
+					p1.add(panelSearch);
+					p1.add(lblSearch);
+					p1.add(btnSaveRow);
+					
+					String query = "select * from mydb.";
+					query = query+comboBox.getSelectedItem().toString();
+					PreparedStatement pst = connection.prepareStatement(query);
+					ResultSet rs = pst.executeQuery();
+					
+					table.setModel(DbUtils.resultSetToTableModel(rs));
+					
+					JTextField textField = RowFilterUtil.createRowFilter(table);
+					
+					panelSearch.removeAll();
+					panelSearch.revalidate();
+					panelSearch.repaint();
+					textField.setSize(150, 30);
+					panelSearch.add(textField);
 					
 					p1.revalidate();
 					p1.repaint();
