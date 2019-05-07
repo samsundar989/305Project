@@ -8,7 +8,6 @@ public class Driver {
 		// TODO Auto-generated method stub
 		
 		Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "Project305!");
-		
 		//Statement myStmt = myConn.createStatement();
 		
 		//JOptionPane.showMessageDialog(null, "Connection Successfull");

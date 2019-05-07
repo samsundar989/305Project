@@ -106,15 +106,24 @@ public class CustomerView extends JFrame {
 		p1.add(textField);
 		textField.setColumns(10);
 		
+		//TODO Add to Shopping Cart 
 		JButton btnAddToShopping = new JButton("Add To Shopping Cart");
 		btnAddToShopping.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int selectionRow = table.getSelectedRow();
+				
+				System.out.println();
+				
+//				String query = "select * from mydb.item";
+//				PreparedStatement pst = connection.prepareStatement(query);
+//				ResultSet rs = pst.executeQuery();
 			}
 		});
 		btnAddToShopping.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnAddToShopping.setBounds(305, 40, 300, 36);
 		p1.add(btnAddToShopping);
 		
+		// TODO: Implement review 
 		JButton btnLookAt = new JButton("See/Leave review");
 		btnLookAt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -195,9 +204,6 @@ public class CustomerView extends JFrame {
 		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnRemove.setBounds(286, 40, 364, 36);
 		p2.add(btnRemove);
-		
-		
-		
 		
 		
 		tabbedPane.add("Shopping Cart",p2); 
