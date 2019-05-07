@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 import java.util.Vector;
@@ -20,6 +22,7 @@ public class SellerView extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
+	private String sellerID;
 
 	/**
 	 * Launch the application.
@@ -38,14 +41,13 @@ public class SellerView extends JFrame {
 		});
 	}
 	
-	//test
-	
 	Connection connection = null;
 	/**
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
 	public SellerView() throws SQLException {
+		
 		connection = Driver.dbConnector();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
@@ -58,13 +60,15 @@ public class SellerView extends JFrame {
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		
-		tabbedPane.setBounds(15, 45, 1225, 545);
+		tabbedPane.setBounds(6, 50, 1225, 545);
 		JPanel p1=new JPanel();  
 		p1.setBackground(new Color(0, 1, 32));
 		p1.setForeground(new Color(0, 1, 32));
 		tabbedPane.add("Items",p1); 
 		
-		String query = "select * from mydb.item;";
+		//String ID = Login.ID;
+		
+		String query = "select * from mydb.item";
 		PreparedStatement pst = connection.prepareStatement(query);
 		ResultSet rs = pst.executeQuery();
 		
@@ -98,10 +102,53 @@ public class SellerView extends JFrame {
 		p1.add(scrollPane);
 		
 		JButton btnAddRow = new JButton("Add Row");
+		btnAddRow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					DefaultTableModel m = (DefaultTableModel) table.getModel();
+					Vector row = new Vector();
+					for(int i = 0; i < table.getColumnCount(); i++) {
+						row.add("Enter data");
+					}
+					m.addRow(row);
+					m.fireTableDataChanged();
+					
+				}catch (Exception ex) {
+					
+				}
+			}
+		});
 		btnAddRow.setBounds(442, 40, 115, 29);
 		p1.add(btnAddRow);
 		
 		JButton btnSaveRow = new JButton("Save Row");
+		btnSaveRow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Statement stmt = connection.createStatement();
+				    String sql = "INSERT INTO mydb.item";
+					sql+=" VALUES ('"+table.getValueAt(table.getSelectedRow(), 0)+"'";
+					for(int i = 1; i < table.getColumnCount(); i++) {
+						sql+=", '"+table.getValueAt(table.getSelectedRow(), i)+"'";
+					}
+					sql+=");";
+					stmt.executeUpdate(sql);
+					table.clearSelection();
+				}catch (Exception ex) {
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					ex.printStackTrace(pw);
+					String sStackTrace = sw.toString(); 
+					sStackTrace = sStackTrace.split("\n")[0];
+					JOptionPane.showMessageDialog(null, sStackTrace);
+					// remove selected row
+					DefaultTableModel m = (DefaultTableModel) table.getModel();
+					m.removeRow(table.getSelectedRow());
+					m.fireTableDataChanged();
+					table.clearSelection();
+				}
+			}
+		});
 		btnSaveRow.setBounds(612, 40, 115, 29);
 		p1.add(btnSaveRow);
 		
@@ -119,6 +166,58 @@ public class SellerView extends JFrame {
 		p1.add(lblSearch);
 		
 		JButton btnRemove = new JButton("Remove");
+		btnRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Statement stmt = connection.createStatement();
+					String sql = "DELETE FROM mydb.item";
+					sql+=" WHERE ";
+					sql+=table.getColumnName(0)+" = '"+table.getValueAt(table.getSelectedRow(), 0)+"'";
+					for(int i = 1; i < table.getColumnCount(); i++) {
+						sql+=" AND "+table.getColumnName(i)+" = '"+table.getValueAt(table.getSelectedRow(), i)+"'";
+					}
+
+				    stmt.executeUpdate(sql);
+				    
+				    // redraw table
+				    p1.removeAll();
+					p1.add(btnRemove);
+					p1.add(btnAddRow);
+					p1.add(scrollPane);
+					p1.add(btnShowOnlyMy);
+					p1.add(textField);
+					p1.add(lblSearch);
+					p1.add(btnSaveRow);
+					
+					String query = "select * from mydb.item";
+					PreparedStatement pst = connection.prepareStatement(query);
+					ResultSet rs = pst.executeQuery();
+					
+					table.setModel(DbUtils.resultSetToTableModel(rs));
+					
+					JTextField textField = RowFilterUtil.createRowFilter(table);
+					
+					//panelSearch.removeAll();
+					//panelSearch.revalidate();
+					//panelSearch.repaint();
+					textField.setSize(150, 30);
+					//panelSearch.add(textField);
+					
+					p1.revalidate();
+					p1.repaint();
+				    
+				    
+				    
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					if(e instanceof SQLException){
+						e.printStackTrace();
+					}
+					System.out.println("Choose table and row");
+				}
+			}
+		});
+		
 		btnRemove.setBounds(271, 40, 115, 29);
 		p1.add(btnRemove);
 		
@@ -129,6 +228,29 @@ public class SellerView extends JFrame {
 		
 		contentPane.add(tabbedPane);
 		
+		JButton signOutButton = new JButton("Sign out");
+		signOutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				LoginFrame av;
+				try {
+					av = new LoginFrame();
+					av.setVisible(true);
+					dispose();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		signOutButton.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		signOutButton.setBounds(1121, 34, 157, 29);
+		contentPane.add(signOutButton);
 		
 	}
 }
+
+
+
+
+
+
