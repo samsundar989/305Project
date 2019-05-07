@@ -109,14 +109,23 @@ public class CustomerView extends JFrame {
 		//TODO Add to Shopping Cart 
 		JButton btnAddToShopping = new JButton("Add To Shopping Cart");
 		btnAddToShopping.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int selectionRow = table.getSelectedRow();
+			public void actionPerformed(ActionEvent e) {	
+				try {
+					int selectedRow = table.getSelectedRow();
+					String selectedID = (String) table.getValueAt(table.getSelectedRow(), 0);
+					String price = (String) table.getValueAt(table.getSelectedRow(), 2);
+					String query = "insert into mydb.shoppingcart (quantity, itemsbought, priceperitem, totalprice, customerid)"
+							+ "VALUES ('"+1+"', '"+selectedID+"', '"+price+"', '"+price+"', '"+price+"');";
+					
+					PreparedStatement pst = connection.prepareStatement(query);
+					ResultSet rs = pst.executeQuery();
+					rs.close();
+					pst.close();
+					
+				}catch(Exception t) {
+					JOptionPane.showMessageDialog(null, "Error");
+				}
 				
-				System.out.println();
-				
-//				String query = "select * from mydb.item";
-//				PreparedStatement pst = connection.prepareStatement(query);
-//				ResultSet rs = pst.executeQuery();
 			}
 		});
 		btnAddToShopping.setFont(new Font("Tahoma", Font.PLAIN, 24));
