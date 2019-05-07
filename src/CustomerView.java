@@ -112,11 +112,12 @@ public class CustomerView extends JFrame {
 			public void actionPerformed(ActionEvent e) {	
 				try {
 					int selectedRow = table.getSelectedRow();
-					String selectedID = (String) table.getValueAt(table.getSelectedRow(), 0);
-					String price = (String) table.getValueAt(table.getSelectedRow(), 2);
-					String query = "insert into mydb.shoppingcart (quantity, itemsbought, priceperitem, totalprice, customerid)"
-							+ "VALUES ('"+1+"', '"+selectedID+"', '"+price+"', '"+price+"', '"+price+"');";
-					
+					String isbn = (String) table.getValueAt(table.getSelectedRow(), 0);
+					String title = (String) table.getValueAt(table.getSelectedRow(), 1);
+					String author = (String) table.getValueAt(table.getSelectedRow(), 2);
+					String price = (String) table.getValueAt(table.getSelectedRow(), 4);
+					String query = "insert into mydb.shoppingcart (isbn, title, author, price, quantity)"
+							+ "VALUES ('"+isbn+"', '"+title+"', '"+author+"', '"+price+"', '"+1+"');";
 					PreparedStatement pst = connection.prepareStatement(query);
 					ResultSet rs = pst.executeQuery();
 					rs.close();
