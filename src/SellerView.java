@@ -19,6 +19,7 @@ import java.awt.Panel;
 public class SellerView extends JFrame {
 
 	private JPanel contentPane;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -84,21 +85,30 @@ public class SellerView extends JFrame {
 		
 		table.setRowHeight(30);
 		
+		textField = RowFilterUtil.createRowFilter(table);//JTextField();
+		textField.setBounds(25, 52, 146, 26);
+		p1.add(textField);
+		textField.setColumns(10);
+		
 		scrollPane.setOpaque(false);
 		scrollPane.getViewport().setOpaque(false);
 		p1.setLayout(null);
 		p1.add(scrollPane);
 		
 		JButton btnAddRow = new JButton("Add Row");
-		btnAddRow.setBounds(286, 40, 115, 29);
+		btnAddRow.setBounds(442, 40, 115, 29);
 		p1.add(btnAddRow);
 		
 		JButton btnSaveRow = new JButton("Save Row");
-		btnSaveRow.setBounds(451, 40, 115, 29);
+		btnSaveRow.setBounds(612, 40, 115, 29);
 		p1.add(btnSaveRow);
 		
 		JButton btnShowOnlyMy = new JButton("Show Only My Items");
-		btnShowOnlyMy.setBounds(645, 40, 207, 29);
+		btnShowOnlyMy.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnShowOnlyMy.setBounds(783, 40, 207, 29);
 		p1.add(btnShowOnlyMy);
 		
 		JLabel lblSearch = new JLabel("Search");
@@ -107,7 +117,7 @@ public class SellerView extends JFrame {
 		p1.add(lblSearch);
 		
 		JButton btnRemove = new JButton("Remove");
-		btnRemove.setBounds(130, 40, 115, 29);
+		btnRemove.setBounds(271, 40, 115, 29);
 		p1.add(btnRemove);
 		
 		JPanel p2=new JPanel();

@@ -17,6 +17,8 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 import java.util.Vector;
@@ -143,16 +145,30 @@ public class AdminView extends JFrame {
 		panelSearch.add(textFieldTemp);
 		
 		JButton btnSaveRow = new JButton("Save Row");
-		btnSaveRow.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		btnSaveRow.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnSaveRow.setBounds(818, 37, 154, 36);
 		p1.add(btnSaveRow);
 		textFieldTemp.setSize(150, 30);
 		
 		contentPane.add(tabbedPane);
+		
+		JButton btnSignOut = new JButton("Sign out");
+		btnSignOut.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		btnSignOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				LoginFrame av;
+				try {
+					av = new LoginFrame();
+					av.setVisible(true);
+					dispose();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnSignOut.setBounds(1160, 26, 157, 29);
+		contentPane.add(btnSignOut);
 		
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -184,7 +200,17 @@ public class AdminView extends JFrame {
 					stmt.executeUpdate(sql);
 					table.clearSelection();
 				}catch (Exception ex) {
-					
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					ex.printStackTrace(pw);
+					String sStackTrace = sw.toString(); 
+					sStackTrace = sStackTrace.split("\n")[0];
+					JOptionPane.showMessageDialog(null, sStackTrace);
+					// remove selected row
+					DefaultTableModel m = (DefaultTableModel) table.getModel();
+					m.removeRow(table.getSelectedRow());
+					m.fireTableDataChanged();
+					table.clearSelection();
 				}
 			}
 		});
@@ -237,7 +263,7 @@ public class AdminView extends JFrame {
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					if(e instanceof SQLException){
-						System.out.println("Key constraint is violated");
+						e.printStackTrace();
 					}
 					System.out.println("Choose table and row");
 				}

@@ -15,6 +15,8 @@ import java.util.Vector;
 import javax.swing.*;
 import java.awt.Font;
 import java.awt.Panel;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 public class CustomerView extends JFrame {
 
@@ -99,12 +101,16 @@ public class CustomerView extends JFrame {
 		label.setBounds(25, 16, 129, 20);
 		p1.add(label);
 		
-		textField = new JTextField();
+		textField = RowFilterUtil.createRowFilter(table);//JTextField();
 		textField.setBounds(25, 52, 146, 26);
 		p1.add(textField);
 		textField.setColumns(10);
 		
 		JButton btnAddToShopping = new JButton("Add To Shopping Cart");
+		btnAddToShopping.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnAddToShopping.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnAddToShopping.setBounds(305, 40, 300, 36);
 		p1.add(btnAddToShopping);
@@ -120,12 +126,105 @@ public class CustomerView extends JFrame {
 		
 		
 		JPanel p2=new JPanel();
+		p2.setBackground(new Color(0, 1, 32));
+		p2.setForeground(new Color(0, 1, 32));
+		
+		
+		String query2 = "select * from mydb.shoppingcart";
+		PreparedStatement pst2 = connection.prepareStatement(query2);
+		ResultSet rs2 = pst2.executeQuery();
+		
+		JTable table2 = new JTable();
+		table2.setModel(DbUtils.resultSetToTableModel(rs2));
+		JScrollPane scrollPane2 = new JScrollPane();
+		scrollPane2.setBounds(0, 109, 1220, 402);
+		scrollPane2.setOpaque(false);
+		scrollPane2.setViewportView(table2);
+		
+		table2.setOpaque(false);
+		((DefaultTableCellRenderer)table2.getDefaultRenderer(Object.class)).setOpaque(false);
+		
+		table2.setFont(new Font("Tahoma", Font.BOLD, 22));
+		table2.setForeground(Color.white);
+		
+		table2.setSelectionForeground(new Color(1, 159, 254));
+		
+		table2.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
+		
+		table2.setRowHeight(30);
+		
+		scrollPane2.setOpaque(false);
+		scrollPane2.getViewport().setOpaque(false);
+		p2.setLayout(null);
+		p2.add(scrollPane2);
+		
+		JLabel label2 = new JLabel("Search");
+		label2.setForeground(Color.WHITE);
+		label2.setFont(new Font("Tahoma", Font.BOLD, 22));
+		label2.setBounds(25, 16, 129, 20);
+		p2.add(label2);
+		
+		JTextField textField2 = RowFilterUtil.createRowFilter(table2);//JTextField();
+		textField2.setBounds(25, 52, 146, 26);
+		p2.add(textField2);
+		textField2.setColumns(10);
+		
+		JButton btnPurchase = new JButton("Complete Purchase");
+		btnPurchase.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Purchase rd = new Purchase();
+					rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		            rd.setVisible(true);
+					
+				} catch (Exception ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}
+		});
+		btnPurchase.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		btnPurchase.setBounds(692, 40, 300, 36);
+		p2.add(btnPurchase);
+		
+		JButton btnRemove = new JButton("Remove from shopping cart");
+		btnRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		btnRemove.setBounds(286, 40, 364, 36);
+		p2.add(btnRemove);
+		
+		
+		
+		
+		
 		tabbedPane.add("Shopping Cart",p2); 
 		JPanel p3=new JPanel();
 		tabbedPane.add("Orders",p3); 
 		
 		contentPane.add(tabbedPane);
 		
+		JButton button = new JButton("Sign out");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				LoginFrame av;
+				try {
+					av = new LoginFrame();
+					av.setVisible(true);
+					dispose();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		button.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		button.setBounds(1183, 16, 157, 29);
+		contentPane.add(button);
+		
 		
 	}
+
 }
