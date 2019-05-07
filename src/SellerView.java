@@ -38,6 +38,8 @@ public class SellerView extends JFrame {
 		});
 	}
 	
+	//test
+	
 	Connection connection = null;
 	/**
 	 * Create the frame.
