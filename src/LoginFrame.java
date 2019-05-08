@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 import java.util.Vector;
@@ -102,6 +103,11 @@ public class LoginFrame extends JFrame {
 					
 					if(count == 1) {
 						dispose();
+						
+						PrintWriter out = new PrintWriter ("username_info.txt");
+						out.print(textFieldUN.getText());
+						out.close();
+						
 						if(view.equals("admin")) {
 							AdminView av = new AdminView();
 							av.setVisible(true);

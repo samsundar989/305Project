@@ -218,7 +218,7 @@ public class SellerView extends JFrame {
 					System.out.println("Choose table and row");
 				}
 			}
-		});
+		}); 
 		
 		btnRemove.setBounds(271, 40, 115, 29);
 		p1.add(btnRemove);
