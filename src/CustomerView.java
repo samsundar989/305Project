@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 import java.util.Vector;
@@ -111,19 +112,21 @@ public class CustomerView extends JFrame {
 		btnAddToShopping.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
 				try {
-					int selectedRow = table.getSelectedRow();
-					String isbn = (String) table.getValueAt(table.getSelectedRow(), 0);
-					String title = (String) table.getValueAt(table.getSelectedRow(), 1);
-					String author = (String) table.getValueAt(table.getSelectedRow(), 2);
-					String price = (String) table.getValueAt(table.getSelectedRow(), 4);
-					String query = "insert into mydb.shoppingcart (isbn, title, author, price, quantity)"
-							+ "VALUES ('"+isbn+"', '"+title+"', '"+author+"', '"+price+"', '"+1+"');";
-					PreparedStatement pst = connection.prepareStatement(query);
-					ResultSet rs = pst.executeQuery();
-					rs.close();
-					pst.close();
+//					int selectedRow = table.getSelectedRow();
+//					String isbn = ""+table.getValueAt(table.getSelectedRow(), 0);
+//					String title = (String) table.getValueAt(table.getSelectedRow(), 1);
+//					String author = (String) table.getValueAt(table.getSelectedRow(), 2);
+//					String price = (String) table.getValueAt(table.getSelectedRow(), 4);
+//					
+//					String query = "INSERT INTO mydb.shoppingcart(ISBN, Title, Author, Price, Quantity, CustomerID)"
+//							+ " VALUES ("+isbn+", '"+title+"', '"+author+"', "+price+", '"+1+"', '112');";
+//					PreparedStatement pst = connection.prepareStatement(query);
+//					ResultSet rs = pst.executeQuery();
+//					rs.close();
+//					pst.close();
 					
 				}catch(Exception t) {
+					t.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error");
 				}
 				
@@ -137,6 +140,23 @@ public class CustomerView extends JFrame {
 		JButton btnLookAt = new JButton("See/Leave review");
 		btnLookAt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					if(table.getSelectionModel().isSelectionEmpty() == true) {
+						JOptionPane.showMessageDialog(null, "Please select item for which you\nwould like to see reviews");
+					}else {
+						PrintWriter out = new PrintWriter ("review_data.txt");
+						out.print(table.getValueAt(table.getSelectedRow(), 0)+" "+
+								(table.getValueAt(table.getSelectedRow(), 3)));
+						out.close();
+						Review rd = new Review();
+						rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			            rd.setVisible(true);
+					}
+					
+				} catch (Exception ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
 			}
 		});
 		btnLookAt.setFont(new Font("Tahoma", Font.PLAIN, 24));
