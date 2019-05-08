@@ -257,10 +257,40 @@ public class SellerView extends JFrame {
 		p2.add(ordersScrollPane);
 		
 		
+		JPanel p3 = new JPanel();
+		tabbedPane.add("Shipments",p3); 
 		
+		query = "select * from mydb.shipment;";
+		//query += "where sellerID = (the seller ID of current User);";
+		pst = connection.prepareStatement(query);
+		rs = pst.executeQuery();
 		
-		JPanel p3=new JPanel();
-		tabbedPane.add("Shipmennts",p3); 
+		JTable shipmentsTable = new JTable();
+		shipmentsTable.setModel(DbUtils.resultSetToTableModel(rs));
+		JScrollPane shipmentsScrollPane = new JScrollPane();
+		shipmentsScrollPane.setBounds(0, 109, 1220, 402);
+		shipmentsScrollPane.setOpaque(false);
+		shipmentsScrollPane.setViewportView(shipmentsTable);
+		
+		shipmentsTable.setOpaque(false);
+		((DefaultTableCellRenderer)shipmentsTable.getDefaultRenderer(Object.class)).setOpaque(false);
+		
+		shipmentsTable.setFont(new Font("Tahoma", Font.BOLD, 22));
+		shipmentsTable.setForeground(Color.white);
+		
+		shipmentsTable.setSelectionForeground(new Color(1, 159, 254));
+		
+		shipmentsTable.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
+		
+		shipmentsTable.setRowHeight(30);
+		
+		p3.setBackground(new Color(0,1,32));
+		p3.setForeground(new Color(0,1,32));
+		
+		shipmentsScrollPane.setOpaque(false);
+		shipmentsScrollPane.getViewport().setOpaque(false);
+		p3.setLayout(null);
+		p3.add(shipmentsScrollPane);
 		
 		contentPane.add(tabbedPane);
 		
