@@ -72,42 +72,42 @@ public class SellerView extends JFrame {
 		PreparedStatement pst = connection.prepareStatement(query);
 		ResultSet rs = pst.executeQuery();
 		
-		JTable table = new JTable();
-		table.setModel(DbUtils.resultSetToTableModel(rs));
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 109, 1220, 402);
-		scrollPane.setOpaque(false);
-		scrollPane.setViewportView(table);
+		JTable itemsTable = new JTable();
+		itemsTable.setModel(DbUtils.resultSetToTableModel(rs));
+		JScrollPane itemsScrollPane = new JScrollPane();
+		itemsScrollPane.setBounds(0, 109, 1220, 402);
+		itemsScrollPane.setOpaque(false);
+		itemsScrollPane.setViewportView(itemsTable);
 		
-		table.setOpaque(false);
-		((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
+		itemsTable.setOpaque(false);
+		((DefaultTableCellRenderer)itemsTable.getDefaultRenderer(Object.class)).setOpaque(false);
 		
-		table.setFont(new Font("Tahoma", Font.BOLD, 22));
-		table.setForeground(Color.white);
+		itemsTable.setFont(new Font("Tahoma", Font.BOLD, 22));
+		itemsTable.setForeground(Color.white);
 		
-		table.setSelectionForeground(new Color(1, 159, 254));
+		itemsTable.setSelectionForeground(new Color(1, 159, 254));
 		
-		table.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
+		itemsTable.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
 		
-		table.setRowHeight(30);
+		itemsTable.setRowHeight(30);
 		
-		textField = RowFilterUtil.createRowFilter(table);//JTextField();
+		textField = RowFilterUtil.createRowFilter(itemsTable);//JTextField();
 		textField.setBounds(25, 52, 146, 26);
 		p1.add(textField);
 		textField.setColumns(10);
 		
-		scrollPane.setOpaque(false);
-		scrollPane.getViewport().setOpaque(false);
+		itemsScrollPane.setOpaque(false);
+		itemsScrollPane.getViewport().setOpaque(false);
 		p1.setLayout(null);
-		p1.add(scrollPane);
+		p1.add(itemsScrollPane);
 		
 		JButton btnAddRow = new JButton("Add Row");
 		btnAddRow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					DefaultTableModel m = (DefaultTableModel) table.getModel();
+					DefaultTableModel m = (DefaultTableModel) itemsTable.getModel();
 					Vector row = new Vector();
-					for(int i = 0; i < table.getColumnCount(); i++) {
+					for(int i = 0; i < itemsTable.getColumnCount(); i++) {
 						row.add("Enter data");
 					}
 					m.addRow(row);
@@ -127,13 +127,13 @@ public class SellerView extends JFrame {
 				try {
 					Statement stmt = connection.createStatement();
 				    String sql = "INSERT INTO mydb.item";
-					sql+=" VALUES ('"+table.getValueAt(table.getSelectedRow(), 0)+"'";
-					for(int i = 1; i < table.getColumnCount(); i++) {
-						sql+=", '"+table.getValueAt(table.getSelectedRow(), i)+"'";
+					sql+=" VALUES ('"+itemsTable.getValueAt(itemsTable.getSelectedRow(), 0)+"'";
+					for(int i = 1; i < itemsTable.getColumnCount(); i++) {
+						sql+=", '"+itemsTable.getValueAt(itemsTable.getSelectedRow(), i)+"'";
 					}
 					sql+=");";
 					stmt.executeUpdate(sql);
-					table.clearSelection();
+					itemsTable.clearSelection();
 				}catch (Exception ex) {
 					StringWriter sw = new StringWriter();
 					PrintWriter pw = new PrintWriter(sw);
@@ -142,10 +142,10 @@ public class SellerView extends JFrame {
 					sStackTrace = sStackTrace.split("\n")[0];
 					JOptionPane.showMessageDialog(null, sStackTrace);
 					// remove selected row
-					DefaultTableModel m = (DefaultTableModel) table.getModel();
-					m.removeRow(table.getSelectedRow());
+					DefaultTableModel m = (DefaultTableModel) itemsTable.getModel();
+					m.removeRow(itemsTable.getSelectedRow());
 					m.fireTableDataChanged();
-					table.clearSelection();
+					itemsTable.clearSelection();
 				}
 			}
 		});
@@ -172,9 +172,9 @@ public class SellerView extends JFrame {
 					Statement stmt = connection.createStatement();
 					String sql = "DELETE FROM mydb.item";
 					sql+=" WHERE ";
-					sql+=table.getColumnName(0)+" = '"+table.getValueAt(table.getSelectedRow(), 0)+"'";
-					for(int i = 1; i < table.getColumnCount(); i++) {
-						sql+=" AND "+table.getColumnName(i)+" = '"+table.getValueAt(table.getSelectedRow(), i)+"'";
+					sql+=itemsTable.getColumnName(0)+" = '"+itemsTable.getValueAt(itemsTable.getSelectedRow(), 0)+"'";
+					for(int i = 1; i < itemsTable.getColumnCount(); i++) {
+						sql+=" AND "+itemsTable.getColumnName(i)+" = '"+itemsTable.getValueAt(itemsTable.getSelectedRow(), i)+"'";
 					}
 
 				    stmt.executeUpdate(sql);
@@ -183,7 +183,7 @@ public class SellerView extends JFrame {
 				    p1.removeAll();
 					p1.add(btnRemove);
 					p1.add(btnAddRow);
-					p1.add(scrollPane);
+					p1.add(itemsScrollPane);
 					p1.add(btnShowOnlyMy);
 					p1.add(textField);
 					p1.add(lblSearch);
@@ -193,9 +193,9 @@ public class SellerView extends JFrame {
 					PreparedStatement pst = connection.prepareStatement(query);
 					ResultSet rs = pst.executeQuery();
 					
-					table.setModel(DbUtils.resultSetToTableModel(rs));
+					itemsTable.setModel(DbUtils.resultSetToTableModel(rs));
 					
-					JTextField textField = RowFilterUtil.createRowFilter(table);
+					JTextField textField = RowFilterUtil.createRowFilter(itemsTable);
 					
 					//panelSearch.removeAll();
 					//panelSearch.revalidate();
@@ -221,8 +221,44 @@ public class SellerView extends JFrame {
 		btnRemove.setBounds(271, 40, 115, 29);
 		p1.add(btnRemove);
 		
-		JPanel p2=new JPanel();
+		JPanel p2 = new JPanel();
 		tabbedPane.add("Orders",p2); 
+		
+		query = "select * from mydb.sendsout;";
+		//query += "where sellerID = (the seller ID of current User);";
+		pst = connection.prepareStatement(query);
+		rs = pst.executeQuery();
+		
+		JTable ordersTable = new JTable();
+		ordersTable.setModel(DbUtils.resultSetToTableModel(rs));
+		JScrollPane ordersScrollPane = new JScrollPane();
+		ordersScrollPane.setBounds(0, 109, 1220, 402);
+		ordersScrollPane.setOpaque(false);
+		ordersScrollPane.setViewportView(ordersTable);
+		
+		ordersTable.setOpaque(false);
+		((DefaultTableCellRenderer)ordersTable.getDefaultRenderer(Object.class)).setOpaque(false);
+		
+		ordersTable.setFont(new Font("Tahoma", Font.BOLD, 22));
+		ordersTable.setForeground(Color.white);
+		
+		ordersTable.setSelectionForeground(new Color(1, 159, 254));
+		
+		ordersTable.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
+		
+		ordersTable.setRowHeight(30);
+		
+		p2.setBackground(new Color(0,1,32));
+		p2.setForeground(new Color(0,1,32));
+		
+		ordersScrollPane.setOpaque(false);
+		ordersScrollPane.getViewport().setOpaque(false);
+		p2.setLayout(null);
+		p2.add(ordersScrollPane);
+		
+		
+		
+		
 		JPanel p3=new JPanel();
 		tabbedPane.add("Shipmennts",p3); 
 		
