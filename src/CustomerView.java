@@ -6,12 +6,17 @@ import java.awt.Rectangle;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.awt.event.ActionEvent;
 import java.sql.*;
+import java.util.Scanner;
 import java.util.Vector;
 import javax.swing.*;
 import java.awt.Font;
@@ -109,29 +114,6 @@ public class CustomerView extends JFrame {
 		
 		//TODO Add to Shopping Cart 
 		JButton btnAddToShopping = new JButton("Add To Shopping Cart");
-		btnAddToShopping.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {	
-				try {
-//					int selectedRow = table.getSelectedRow();
-//					String isbn = ""+table.getValueAt(table.getSelectedRow(), 0);
-//					String title = (String) table.getValueAt(table.getSelectedRow(), 1);
-//					String author = (String) table.getValueAt(table.getSelectedRow(), 2);
-//					String price = (String) table.getValueAt(table.getSelectedRow(), 4);
-//					
-//					String query = "INSERT INTO mydb.shoppingcart(ISBN, Title, Author, Price, Quantity, CustomerID)"
-//							+ " VALUES ("+isbn+", '"+title+"', '"+author+"', "+price+", '"+1+"', '112');";
-//					PreparedStatement pst = connection.prepareStatement(query);
-//					ResultSet rs = pst.executeQuery();
-//					rs.close();
-//					pst.close();
-					
-				}catch(Exception t) {
-					t.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error");
-				}
-				
-			}
-		});
 		btnAddToShopping.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnAddToShopping.setBounds(305, 40, 300, 36);
 		p1.add(btnAddToShopping);
@@ -168,8 +150,17 @@ public class CustomerView extends JFrame {
 		p2.setBackground(new Color(0, 1, 32));
 		p2.setForeground(new Color(0, 1, 32));
 		
+		int id = 0;
 		
-		String query2 = "select * from mydb.shoppingcart";
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			id = sc.nextInt(); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		String query2 = "select * from mydb.shoppingcart ";
+		query2 += "where CustomerID=" + id;
 		PreparedStatement pst2 = connection.prepareStatement(query2);
 		ResultSet rs2 = pst2.executeQuery();
 		
@@ -211,7 +202,7 @@ public class CustomerView extends JFrame {
 		JButton btnPurchase = new JButton("Complete Purchase");
 		btnPurchase.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
+				try {	
 					Purchase rd = new Purchase();
 					rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		            rd.setVisible(true);
@@ -260,6 +251,32 @@ public class CustomerView extends JFrame {
 		button.setBounds(1183, 16, 157, 29);
 		contentPane.add(button);
 		
+		btnAddToShopping.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				try {
+					String isbn = ""+table.getValueAt(table.getSelectedRow(), 0);
+					String price = (String) table.getValueAt(table.getSelectedRow(), 2);
+					int sellerID = (Integer) table.getValueAt(table.getSelectedRow(), 3);
+					
+					Scanner sc = new Scanner(new File("username_info.txt"));
+					int customerID = sc.nextInt();
+					
+					String query = "INSERT INTO mydb.shoppingcart"
+							+ " VALUES ("+isbn+","+price+","+customerID+","+sellerID+")";
+					query += "on duplicate key update price=" + price;
+					PreparedStatement pst = connection.prepareStatement(query);
+					
+					Statement statement = connection.createStatement();
+					statement.executeUpdate(query);
+					
+					ResultSet rs3 = pst2.executeQuery();
+					table2.setModel(DbUtils.resultSetToTableModel(rs3));
+				} catch(Exception t) {
+					t.printStackTrace();
+				}
+				
+			}
+		});
 		
 	}
 
