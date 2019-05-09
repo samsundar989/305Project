@@ -9,10 +9,12 @@ import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.awt.event.ActionEvent;
 import java.sql.*;
+import java.util.Scanner;
 import java.util.Vector;
 import javax.swing.*;
 import java.awt.Font;
@@ -157,6 +159,20 @@ public class SellerView extends JFrame {
 		JButton btnShowOnlyMy = new JButton("Show Only My Items");
 		btnShowOnlyMy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					
+					Scanner sc = new Scanner(new File("username_info.txt"));
+					int id = sc.nextInt();
+					
+					String query = "select * from mydb.item ";
+					query += "where SellerID=" + id;
+					PreparedStatement pst = connection.prepareStatement(query);
+					ResultSet rs = pst.executeQuery();
+				
+					itemsTable.setModel(DbUtils.resultSetToTableModel(rs));
+				} catch(Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 		});
 		btnShowOnlyMy.setBounds(783, 40, 207, 29);
@@ -226,8 +242,17 @@ public class SellerView extends JFrame {
 		JPanel p2 = new JPanel();
 		tabbedPane.add("Orders",p2); 
 		
-		query = "select * from mydb.sendsout;";
-		//query += "where sellerID = (the seller ID of current User);";
+		int id = 0;
+		
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			id = sc.nextInt();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		query = "select * from mydb.sendsout ";
+		query += "where sellerID =" + id;
 		pst = connection.prepareStatement(query);
 		rs = pst.executeQuery();
 		
@@ -250,6 +275,8 @@ public class SellerView extends JFrame {
 		
 		ordersTable.setRowHeight(30);
 		
+		
+		
 		p2.setBackground(new Color(0,1,32));
 		p2.setForeground(new Color(0,1,32));
 		
@@ -271,8 +298,15 @@ public class SellerView extends JFrame {
 		JPanel p3 = new JPanel();
 		tabbedPane.add("Shipments",p3); 
 		
-		query = "select * from mydb.shipment;";
-		//query += "where sellerID = (the seller ID of current User);";
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			id = sc.nextInt();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		query = "select * from mydb.shipment ";
+		query += "where SellerID =" + id;
 		pst = connection.prepareStatement(query);
 		rs = pst.executeQuery();
 		
