@@ -173,7 +173,7 @@ public class Purchase extends JDialog {
 		    ResultSet shoppingCart = stmt.executeQuery(sql);
 		    double totalCharge = 0;
 		    while(shoppingCart.next()) {
-		    	totalCharge = totalCharge + shoppingCart.getDouble(4);
+		    	totalCharge = totalCharge + shoppingCart.getDouble(2);
 		    	totalPrices.add(shoppingCart.getDouble(4));
 		    	items.add(shoppingCart.getString(1));
 		    }
@@ -208,7 +208,7 @@ public class Purchase extends JDialog {
 							int confirmationNum =0;
 							// To generate ConfirmationNumber
 							check = connection.createStatement();
-							String num = "SELECT * FROM mydb.orders ORDER BY ConfirmationNumber DESC LIMIT 1;";
+							String num = "SELECT * FROM mydb.orders ORDER BY ConfirmationNum DESC LIMIT 1;";
 							ResultSet confirmation = check.executeQuery(num);
 							if(confirmation.next()==false) {
 								confirmationNum=1;
