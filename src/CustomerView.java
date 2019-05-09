@@ -150,11 +150,11 @@ public class CustomerView extends JFrame {
 		p2.setBackground(new Color(0, 1, 32));
 		p2.setForeground(new Color(0, 1, 32));
 		
-		int id = 0;
+		String id = "";
 		
 		try {
 			Scanner sc = new Scanner(new File("username_info.txt"));
-			id = sc.nextInt(); 
+			id = sc.next(); 
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -261,7 +261,7 @@ public class CustomerView extends JFrame {
 		p3.setForeground(new Color(0, 1, 32));
 		tabbedPane.add("Orders",p3); 
 		
-		String query3 = "select * from mydb.orders";
+		String query3 = "select * from mydb.makesa";
 		PreparedStatement pst3 = connection.prepareStatement(query3);
 		ResultSet rs3 = pst3.executeQuery();
 		
@@ -324,20 +324,26 @@ public class CustomerView extends JFrame {
 			public void actionPerformed(ActionEvent e) {	
 				try {
 					String isbn = ""+table.getValueAt(table.getSelectedRow(), 0);
-					String price = (String) table.getValueAt(table.getSelectedRow(), 2);
-					int sellerID = (Integer) table.getValueAt(table.getSelectedRow(), 3);
+					String price = ""+ table.getValueAt(table.getSelectedRow(), 2);
+					BigDecimal bd = (BigDecimal) table.getValueAt(table.getSelectedRow(), 2);
+					double cost = bd.doubleValue();
+					System.out.println(cost);
+					double incCost = 2*cost;
+					String sellerID = ""+ table.getValueAt(table.getSelectedRow(), 3);
 					
 					Scanner sc = new Scanner(new File("username_info.txt"));
-					int customerID = sc.nextInt();
+					String customerID = sc.next();
 					
 					String query = "INSERT INTO mydb.shoppingcart"
-							+ " VALUES ("+isbn+","+price+","+customerID+","+sellerID+")";
-					query += "on duplicate key update price=" + price;
+							+ " VALUES ("+isbn+","+1+","+price+","+price+", "+customerID+")";
+					query += "on duplicate key update TotalPrice=TotalPrice+" +price 
+							+ " , Quantity=Quantity+1";
+					System.out.println(query);
 					PreparedStatement pst = connection.prepareStatement(query);
 					
 					Statement statement = connection.createStatement();
 					statement.executeUpdate(query);
-					
+			
 					ResultSet rs3 = pst2.executeQuery();
 					table2.setModel(DbUtils.resultSetToTableModel(rs3));
 				} catch(Exception t) {

@@ -107,14 +107,12 @@ public class Login {
 						view = rs.getString(3);
 						count = count+1;
 					}
-					
 					if(count == 1) {
 						frame.dispose();
 						
 						PrintWriter out = new PrintWriter ("username_info.txt");
 						out.print(textFieldUN.getText());
 						out.close();
-	
 						if(view.equals("admin")) {
 							AdminView av = new AdminView();
 							av.setVisible(true);
@@ -126,14 +124,14 @@ public class Login {
 							av.setVisible(true);
 						}
 					}else {
-						JOptionPane.showMessageDialog(null, "Username or/amd password incorrect");
+						JOptionPane.showMessageDialog(null, "Username and/or password incorrect");
 					}
 					
 					rs.close();
 					pst.close();
 					
 				}catch(Exception e) {
-					JOptionPane.showMessageDialog(null, "Username and password error");
+					JOptionPane.showMessageDialog(null, "Username and/or password error");
 				}
 				
 				
