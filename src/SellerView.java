@@ -152,9 +152,26 @@ public class SellerView extends JFrame {
 		btnSaveRow.setBounds(612, 40, 115, 29);
 		p1.add(btnSaveRow);
 		
-		JButton btnShowOnlyMy = new JButton("Show Only My Items");
+		JButton btnShowOnlyMy = new JButton("See Reviews");
 		btnShowOnlyMy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					if(itemsTable.getSelectionModel().isSelectionEmpty() == true) {
+						JOptionPane.showMessageDialog(null, "Please select item for which you\nwould like to see reviews");
+					}else {
+						PrintWriter out = new PrintWriter ("review_data.txt");
+						out.print(itemsTable.getValueAt(itemsTable.getSelectedRow(), 0)+" "+
+								(itemsTable.getValueAt(itemsTable.getSelectedRow(), 3)));
+						out.close();
+						ReviewSeller rd = new ReviewSeller();
+						rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			            rd.setVisible(true);
+					}
+					
+				} catch (Exception ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
 			}
 		});
 		btnShowOnlyMy.setBounds(783, 40, 207, 29);
@@ -314,7 +331,6 @@ public class SellerView extends JFrame {
 		
 	}
 }
-
 
 
 
