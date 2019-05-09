@@ -57,6 +57,15 @@ public class Purchase extends JDialog {
 	 * @throws SQLException 
 	 */
 	public Purchase() throws SQLException {
+		Scanner sc;
+		String customerID = "";
+		try {
+			sc = new Scanner(new File("username_info.txt"));
+			customerID = sc.next();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ArrayList<Double> totalPrices = new ArrayList<Double>();
 		ArrayList<String> sellers = new ArrayList<String>();
 		ArrayList<String> items = new ArrayList<String>();
@@ -160,7 +169,7 @@ public class Purchase extends JDialog {
 		{
 			// TODO: Retrieve each item in shopping cart, get total price and sellerID
 			Statement stmt = connection.createStatement();
-			String sql = "SELECT * FROM mydb.shoppingcart;";
+			String sql = "SELECT * FROM mydb.shoppingcart WHERE CustomerID="+customerID+";";
 		    ResultSet shoppingCart = stmt.executeQuery(sql);
 		    double totalCharge = 0;
 		    while(shoppingCart.next()) {
@@ -196,8 +205,6 @@ public class Purchase extends JDialog {
 						Statement payment;
 						Statement check;
 						try {    
-							Scanner sc = new Scanner(new File("username_info.txt"));
-							String customerID = sc.next();
 							int confirmationNum =0;
 							// To generate ConfirmationNumber
 							check = connection.createStatement();
@@ -209,13 +216,15 @@ public class Purchase extends JDialog {
 							else {
 								confirmationNum = confirmation.getInt(2);
 							}
+							Scanner scanner = new Scanner(new File("username_info.txt"));
+							String customer = scanner.next();
 							
 							
 						    // TODO: For each item, create order, but some confirmation number
 							for(int i=0;i<items.size();i++) {
 								payment = connection.createStatement();
 							    String pay = "INSERT INTO mydb.orders" +
-										" VALUES ("+customerID+", "+sellers.get(i)+", "+confirmationNum+");";
+										" VALUES ("+customer+", "+sellers.get(i)+", "+confirmationNum+");";
 							    payment.executeUpdate(pay);
 							}
 							
