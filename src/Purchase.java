@@ -211,7 +211,7 @@ public class Purchase extends JDialog {
 							}
 							
 							
-						    // TODO: For each item in shopping cart, add to Makes A and to Payment
+						    // TODO: For each item, create order, but some confirmation number
 							for(int i=0;i<items.size();i++) {
 								payment = connection.createStatement();
 							    String pay = "INSERT INTO mydb.orders" +
