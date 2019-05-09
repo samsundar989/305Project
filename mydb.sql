@@ -64,6 +64,35 @@ INSERT INTO `databaseuser` VALUES ('111111','123','customer'),('111222','123','c
 UNLOCK TABLES;
 
 --
+-- Table structure for table `Inventory`
+--
+
+DROP TABLE IF EXISTS `Inventory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `Inventory` (
+  `ItemID` int(11) NOT NULL,
+  `ItemName` varchar(45) DEFAULT NULL,
+  `Price` int(11) DEFAULT NULL,
+  `Quantity` int(11) DEFAULT NULL,
+  `SellerID` int(11) NOT NULL,
+  PRIMARY KEY (`SellerID`,`ItemID`),
+  KEY `itemID_idx` (`ItemID`),
+  CONSTRAINT `inventory_sellerID` FOREIGN KEY (`SellerID`) REFERENCES `seller` (`SellerID`),
+  CONSTRAINT `itemID` FOREIGN KEY (`ItemID`) REFERENCES `item` (`ISBN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Inventory`
+--
+
+LOCK TABLES `Inventory` WRITE;
+/*!40000 ALTER TABLE `Inventory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Inventory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Item`
 --
 
@@ -101,8 +130,7 @@ DROP TABLE IF EXISTS `Orders`;
 CREATE TABLE `Orders` (
   `CustomerID` int(11) DEFAULT NULL,
   `SellerID` int(11) DEFAULT NULL,
-  `ConfirmationNum` int(11) NOT NULL,
-  PRIMARY KEY (`ConfirmationNum`),
+  `ConfirmationNum` int(11) DEFAULT NULL,
   KEY `orders_CustomerID_idx` (`CustomerID`),
   KEY `orders_SellerID_idx` (`SellerID`),
   CONSTRAINT `orders_CustomerID` FOREIGN KEY (`CustomerID`) REFERENCES `customer` (`CustomerID`),
@@ -116,7 +144,7 @@ CREATE TABLE `Orders` (
 
 LOCK TABLES `Orders` WRITE;
 /*!40000 ALTER TABLE `Orders` DISABLE KEYS */;
-INSERT INTO `Orders` VALUES (111111,222333,1),(111222,222444,2),(111111,222111,3),(111333,222444,4),(111444,222333,5);
+INSERT INTO `Orders` VALUES (111222,222444,2),(111555,222111,3),(111333,222444,4),(111444,222333,5),(111111,222111,222111),(111111,222111,222333),(111111,222111,222111),(111111,222555,222111);
 /*!40000 ALTER TABLE `Orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,7 +263,7 @@ CREATE TABLE `ShoppingCart` (
 
 LOCK TABLES `ShoppingCart` WRITE;
 /*!40000 ALTER TABLE `ShoppingCart` DISABLE KEYS */;
-INSERT INTO `ShoppingCart` VALUES (23142,'4',111111,111222),(65243,'2',111111,111333),(444111,'4',111222,222111),(444000,'9',111222,222555);
+INSERT INTO `ShoppingCart` VALUES (444111,'4',111222,222111),(65243,'2',111111,222222),(23142,'4',111111,222333),(444000,'9',111222,222555);
 /*!40000 ALTER TABLE `ShoppingCart` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -248,4 +276,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-09 18:48:50
+-- Dump completed on 2019-05-09 19:03:10
