@@ -9,10 +9,12 @@ import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.awt.event.ActionEvent;
 import java.sql.*;
+import java.util.Scanner;
 import java.util.Vector;
 import javax.swing.*;
 import java.awt.Font;
@@ -21,7 +23,9 @@ import java.awt.Panel;
 public class SellerView extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField itemsTxtField;
+	private JTextField ordersTxtField;
+	private JTextField shipmentsTxtField;
 	private String sellerID;
 
 	/**
@@ -91,10 +95,10 @@ public class SellerView extends JFrame {
 		
 		itemsTable.setRowHeight(30);
 		
-		textField = RowFilterUtil.createRowFilter(itemsTable);//JTextField();
-		textField.setBounds(25, 52, 146, 26);
-		p1.add(textField);
-		textField.setColumns(10);
+		itemsTxtField = RowFilterUtil.createRowFilter(itemsTable);//JitemsTxtField();
+		itemsTxtField.setBounds(25, 52, 146, 26);
+		p1.add(itemsTxtField);
+		itemsTxtField.setColumns(10);
 		
 		itemsScrollPane.setOpaque(false);
 		itemsScrollPane.getViewport().setOpaque(false);
@@ -156,6 +160,7 @@ public class SellerView extends JFrame {
 		btnShowOnlyMy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+<<<<<<< HEAD
 					if(itemsTable.getSelectionModel().isSelectionEmpty() == true) {
 						JOptionPane.showMessageDialog(null, "Please select item for which you\nwould like to see reviews");
 					}else {
@@ -170,6 +175,19 @@ public class SellerView extends JFrame {
 					
 				} catch (Exception ex) {
 					// TODO Auto-generated catch block
+=======
+					
+					Scanner sc = new Scanner(new File("username_info.txt"));
+					int id = sc.nextInt();
+					
+					String query = "select * from mydb.item ";
+					query += "where SellerID=" + id;
+					PreparedStatement pst = connection.prepareStatement(query);
+					ResultSet rs = pst.executeQuery();
+				
+					itemsTable.setModel(DbUtils.resultSetToTableModel(rs));
+				} catch(Exception ex) {
+>>>>>>> 3bc25ac986a13f9e13604d306a096299420e5544
 					ex.printStackTrace();
 				}
 			}
@@ -177,10 +195,10 @@ public class SellerView extends JFrame {
 		btnShowOnlyMy.setBounds(783, 40, 207, 29);
 		p1.add(btnShowOnlyMy);
 		
-		JLabel lblSearch = new JLabel("Search");
-		lblSearch.setForeground(Color.WHITE);
-		lblSearch.setBounds(15, 16, 69, 20);
-		p1.add(lblSearch);
+		JLabel lblItemsSearch = new JLabel("Search");
+		lblItemsSearch.setForeground(Color.WHITE);
+		lblItemsSearch.setBounds(15, 16, 69, 20);
+		p1.add(lblItemsSearch);
 		
 		JButton btnRemove = new JButton("Remove");
 		btnRemove.addActionListener(new ActionListener() {
@@ -202,8 +220,8 @@ public class SellerView extends JFrame {
 					p1.add(btnAddRow);
 					p1.add(itemsScrollPane);
 					p1.add(btnShowOnlyMy);
-					p1.add(textField);
-					p1.add(lblSearch);
+					p1.add(itemsTxtField);
+					p1.add(lblItemsSearch);
 					p1.add(btnSaveRow);
 					
 					String query = "select * from mydb.item";
@@ -233,7 +251,7 @@ public class SellerView extends JFrame {
 					System.out.println("Choose table and row");
 				}
 			}
-		});
+		}); 
 		
 		btnRemove.setBounds(271, 40, 115, 29);
 		p1.add(btnRemove);
@@ -241,8 +259,17 @@ public class SellerView extends JFrame {
 		JPanel p2 = new JPanel();
 		tabbedPane.add("Orders",p2); 
 		
-		query = "select * from mydb.sendsout;";
-		//query += "where sellerID = (the seller ID of current User);";
+		int id = 0;
+		
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			id = sc.nextInt();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		query = "select * from mydb.sendsout ";
+		query += "where sellerID =" + id;
 		pst = connection.prepareStatement(query);
 		rs = pst.executeQuery();
 		
@@ -265,6 +292,8 @@ public class SellerView extends JFrame {
 		
 		ordersTable.setRowHeight(30);
 		
+		
+		
 		p2.setBackground(new Color(0,1,32));
 		p2.setForeground(new Color(0,1,32));
 		
@@ -273,12 +302,28 @@ public class SellerView extends JFrame {
 		p2.setLayout(null);
 		p2.add(ordersScrollPane);
 		
+		JLabel lblOrdersSearch = new JLabel("Search");
+		lblOrdersSearch.setForeground(Color.WHITE);
+		lblOrdersSearch.setBounds(15, 16, 69, 20);
+		p2.add(lblOrdersSearch);
+		
+		ordersTxtField = RowFilterUtil.createRowFilter(ordersTable);//JitemsTxtField();
+		ordersTxtField.setBounds(25, 52, 146, 26);
+		p2.add(ordersTxtField);
+		ordersTxtField.setColumns(10);
 		
 		JPanel p3 = new JPanel();
 		tabbedPane.add("Shipments",p3); 
 		
-		query = "select * from mydb.shipment;";
-		//query += "where sellerID = (the seller ID of current User);";
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			id = sc.nextInt();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		query = "select * from mydb.shipment ";
+		query += "where SellerID =" + id;
 		pst = connection.prepareStatement(query);
 		rs = pst.executeQuery();
 		
@@ -308,6 +353,16 @@ public class SellerView extends JFrame {
 		shipmentsScrollPane.getViewport().setOpaque(false);
 		p3.setLayout(null);
 		p3.add(shipmentsScrollPane);
+		
+		JLabel lblShipmentsSearch = new JLabel("Search");
+		lblShipmentsSearch.setForeground(Color.WHITE);
+		lblShipmentsSearch.setBounds(15, 16, 69, 20);
+		p3.add(lblShipmentsSearch);
+		
+		shipmentsTxtField = RowFilterUtil.createRowFilter(shipmentsTable);//JitemsTxtField();
+		shipmentsTxtField.setBounds(25, 52, 146, 26);
+		p3.add(shipmentsTxtField);
+		shipmentsTxtField.setColumns(10);
 		
 		contentPane.add(tabbedPane);
 		
