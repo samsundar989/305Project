@@ -215,7 +215,7 @@ public class Purchase extends JDialog {
 								confirmationNum=1;
 							}
 							else {
-								confirmationNum = confirmation.getInt(2);
+								confirmationNum = confirmation.getInt(2)+1;
 							}
 							Scanner scanner = new Scanner(new File("username_info.txt"));
 							String customer = scanner.next();
