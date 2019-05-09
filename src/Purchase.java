@@ -14,11 +14,15 @@ import java.awt.Insets;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
@@ -53,6 +57,9 @@ public class Purchase extends JDialog {
 	 * @throws SQLException 
 	 */
 	public Purchase() throws SQLException {
+		ArrayList<Double> totalPrices = new ArrayList<Double>();
+		ArrayList<String> sellers = new ArrayList<String>();
+		ArrayList<String> items = new ArrayList<String>();
 		connection = Driver.dbConnector();
 		setBounds(100, 100, 798, 655);
 		getContentPane().setLayout(new BorderLayout());
@@ -151,8 +158,29 @@ public class Purchase extends JDialog {
 			contentPanel.add(textField_4);
 		}
 		{
-			JLabel lblPassword = new JLabel("Amount Charged:");
-			lblPassword.setBounds(17, 438, 185, 29);
+			// TODO: Retrieve each item in shopping cart, get total price and sellerID
+			Statement stmt = connection.createStatement();
+			String sql = "SELECT * FROM mydb.shoppingcart;";
+		    ResultSet shoppingCart = stmt.executeQuery(sql);
+		    double totalCharge = 0;
+		    while(shoppingCart.next()) {
+		    	totalCharge = totalCharge + shoppingCart.getDouble(4);
+		    	totalPrices.add(shoppingCart.getDouble(4));
+		    	items.add(shoppingCart.getString(1));
+		    }
+		    
+		    // Add seller ID to list for each item in shopping Cart
+		    for(int i=0;i<items.size();i++) {
+		    Statement statement = connection.createStatement();
+			String query = "SELECT * FROM mydb.item WHERE ArticleID="+items.get(i)+";";
+			System.out.println(query);
+		    ResultSet inventory = statement.executeQuery(query);
+		    while(inventory.next()) {
+		    	sellers.add(inventory.getString(4));
+		    }
+		    } 
+			JLabel lblPassword = new JLabel("Amount Charged: $"+totalCharge);
+			lblPassword.setBounds(17, 438, 300, 29);
 			lblPassword.setForeground(new Color(240, 255, 255));
 			lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 24));
 			contentPanel.add(lblPassword);
@@ -166,25 +194,54 @@ public class Purchase extends JDialog {
 				JButton okButton = new JButton("Buy");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-//						Statement stmt;
-//						try {
-//							String view = "customer";
-//							if(checkBox.isSelected()) {
-//								view = "seller";
-//							}
-//							stmt = connection.createStatement();
-//							String sql = "INSERT INTO mydb.databaseuser(Username, Password, View) " +
-//									"VALUES ('"+textField_5.getText()+"', '"+passwordField.getText()+"', '"+view+"');";
-//						    stmt.executeUpdate(sql);
+						Statement makesA;
+						Statement payment;
+						Statement check;
+						Statement sends;
+						try {    
+							Scanner sc = new Scanner(new File("username_info.txt"));
+							String customerID = sc.next();
+							int confirmationNum =0;
+							// To generate ConfirmationNumber
+							check = connection.createStatement();
+							String num = "SELECT * FROM mydb.makesa ORDER BY ConfirmationNumber DESC LIMIT 1;";
+							ResultSet confirmation = check.executeQuery(num);
+							if(confirmation.next()==false) {
+								confirmationNum=1;
+							}
+							else {
+								confirmationNum = confirmation.getInt(2);
+							}
+							
+							
+						    // TODO: For each item in shopping cart, add to Makes A and to Payment
+							for(int i=0;i<items.size();i++) {
+								payment = connection.createStatement();
+							    String pay = "INSERT INTO mydb.payment" +
+										" VALUES ("+confirmationNum+", "+totalPrices.get(i)+");";
+							    payment.executeUpdate(pay);
+							    System.out.println(sellers.get(i));
+								makesA = connection.createStatement();
+								String sql = "INSERT INTO mydb.makesa" +
+										" VALUES ("+totalPrices.get(i)+", "+confirmationNum+", "+customerID+", "+sellers.get(i)+");";
+							    makesA.executeUpdate(sql);
+							    
+							    sends = connection.createStatement();
+							    String toSend = "INSERT INTO mydb.sendsout" +
+										" VALUES ("+confirmationNum+", "+sellers.get(i)+", "+customerID+");";
+							    sends.executeQuery(toSend);
+							    confirmationNum++;
+							}
+							
 							dispose();
-//						} catch (SQLException e1) {
-//							// TODO Auto-generated catch block
-//							e1.printStackTrace();
-//						}
+						} catch (SQLException | FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					      
 					}
 				});
-				okButton.setActionCommand("Register");
+				okButton.setActionCommand("Buy");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}

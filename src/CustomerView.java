@@ -164,7 +164,6 @@ public class CustomerView extends JFrame {
 		
 		//TODO Add to Shopping Cart 
 		JButton btnAddToShopping = new JButton("Add To Shopping Cart");
-<<<<<<< HEAD
 		btnAddToShopping.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
 				try {
@@ -177,8 +176,6 @@ public class CustomerView extends JFrame {
 				
 			}
 		});
-=======
->>>>>>> 835c9ba9ee699347d731c065413a8f7a9fb43a50
 		btnAddToShopping.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnAddToShopping.setBounds(305, 40, 300, 36);
 		p1.add(btnAddToShopping);
