@@ -166,10 +166,10 @@ public class CustomerView extends JFrame {
 		
 		JTable table2 = new JTable();
 		table2.setModel(DbUtils.resultSetToTableModel(rs2));
-		JScrollPane scrollPane2 = new JScrollPane();
-		scrollPane2.setBounds(0, 109, 1220, 402);
-		scrollPane2.setOpaque(false);
-		scrollPane2.setViewportView(table2);
+		JScrollPane cartScrollPane = new JScrollPane();
+		cartScrollPane.setBounds(0, 109, 1220, 402);
+		cartScrollPane.setOpaque(false);
+		cartScrollPane.setViewportView(table2);
 		
 		table2.setOpaque(false);
 		((DefaultTableCellRenderer)table2.getDefaultRenderer(Object.class)).setOpaque(false);
@@ -183,10 +183,10 @@ public class CustomerView extends JFrame {
 		
 		table2.setRowHeight(30);
 		
-		scrollPane2.setOpaque(false);
-		scrollPane2.getViewport().setOpaque(false);
+		cartScrollPane.setOpaque(false);
+		cartScrollPane.getViewport().setOpaque(false);
 		p2.setLayout(null);
-		p2.add(scrollPane2);
+		p2.add(cartScrollPane);
 		
 		JLabel label2 = new JLabel("Search");
 		label2.setForeground(Color.WHITE);
@@ -220,8 +220,36 @@ public class CustomerView extends JFrame {
 		JButton btnRemove = new JButton("Remove from shopping cart");
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					Statement stmt = connection.createStatement();
+					String sql = "DELETE FROM mydb.shoppingcart";
+					sql+=" WHERE ";
+					sql+=table2.getColumnName(0)+" = '"+table2.getValueAt(table2.getSelectedRow(), 0)+"'";
+
+				    stmt.executeUpdate(sql);
+				    int id = 0;
+				    try {
+						Scanner sc = new Scanner(new File("username_info.txt"));
+						id = sc.nextInt(); 
+					}catch(Exception ex) {
+						ex.printStackTrace();
+					}
+				    
+				    String querys = "select * from mydb.shoppingcart ";
+					querys += "where CustomerID=" + id;
+					PreparedStatement pst = connection.prepareStatement(querys);
+					ResultSet rs = pst.executeQuery();
+					table2.setModel(DbUtils.resultSetToTableModel(rs));
+				    
+				} catch (Exception ex) {
+					if(ex instanceof SQLException){
+						ex.printStackTrace();
+					}
+					System.out.println("Choose table and row");
+				}
 			}
 		});
+
 		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnRemove.setBounds(286, 40, 364, 36);
 		p2.add(btnRemove);

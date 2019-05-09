@@ -114,7 +114,7 @@ public class Login {
 						PrintWriter out = new PrintWriter ("username_info.txt");
 						out.print(textFieldUN.getText());
 						out.close();
-						
+	
 						if(view.equals("admin")) {
 							AdminView av = new AdminView();
 							av.setVisible(true);
