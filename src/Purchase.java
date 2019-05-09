@@ -174,7 +174,7 @@ public class Purchase extends JDialog {
 		    double totalCharge = 0;
 		    while(shoppingCart.next()) {
 		    	totalCharge = totalCharge + shoppingCart.getDouble(2);
-		    	totalPrices.add(shoppingCart.getDouble(4));
+		    	totalPrices.add(shoppingCart.getDouble(2));
 		    	items.add(shoppingCart.getString(1));
 		    }
 		    
