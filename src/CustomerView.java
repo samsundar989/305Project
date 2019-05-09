@@ -255,13 +255,11 @@ public class CustomerView extends JFrame {
 		    		Scanner sc = new Scanner(new File("username_info.txt"));
 		    		id = sc.next(); 
 		    		
-		            String query3 = "select * from mydb.orders";
-		    		query3 += " where CustomerID=" + id;
-		    		PreparedStatement pst3 = connection.prepareStatement(query3);
-		    		ResultSet rs3 = pst3.executeQuery();
 		    		
-		    		JTable table3 = new JTable();
-		    		table3.setModel(DbUtils.resultSetToTableModel(rs3));
+					String toDelete = "DELETE FROM mydb.shoppingcart WHERE CustomerID="+id+";";
+		    		PreparedStatement pst3 = connection.prepareStatement(toDelete);
+		    		ResultSet rs3 = pst3.executeQuery();
+		    		table2.setModel(DbUtils.resultSetToTableModel(rs3));
 					
 				} catch (Exception ex) {
 					// TODO Auto-generated catch block
