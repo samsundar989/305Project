@@ -197,6 +197,7 @@ public class Purchase extends JDialog {
 						Statement makesA;
 						Statement payment;
 						Statement check;
+						Statement sends;
 						try {    
 							Scanner sc = new Scanner(new File("username_info.txt"));
 							String customerID = sc.next();
@@ -224,8 +225,11 @@ public class Purchase extends JDialog {
 								String sql = "INSERT INTO mydb.makesa" +
 										" VALUES ("+totalPrices.get(i)+", "+confirmationNum+", "+customerID+", "+sellers.get(i)+");";
 							    makesA.executeUpdate(sql);
-						    
-						    
+							    
+							    sends = connection.createStatement();
+							    String toSend = "INSERT INTO mydb.sendsout" +
+										" VALUES ("+confirmationNum+", "+sellers.get(i)+", "+customerID+");";
+							    sends.executeQuery(toSend);
 							    confirmationNum++;
 							}
 							
