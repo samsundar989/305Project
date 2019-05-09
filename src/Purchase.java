@@ -228,8 +228,7 @@ public class Purchase extends JDialog {
 										" VALUES ("+customer+", "+sellers.get(i)+", "+confirmationNum+");";
 							    payment.executeUpdate(pay);
 							}
-							
-							
+						
 							dispose();
 						} catch (SQLException | FileNotFoundException e1) {
 							// TODO Auto-generated catch block

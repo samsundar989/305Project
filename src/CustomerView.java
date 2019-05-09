@@ -254,13 +254,15 @@ public class CustomerView extends JFrame {
 		            String id = "";
 		    		Scanner sc = new Scanner(new File("username_info.txt"));
 		    		id = sc.next(); 
-		    		
-		    		
-					String toDelete = "DELETE FROM mydb.shoppingcart WHERE CustomerID="+id+";";
+		    
+					String toDelete = "DELETE * FROM mydb.shoppingcart WHERE CustomerID="+id+";";
 		    		PreparedStatement pst3 = connection.prepareStatement(toDelete);
 		    		ResultSet rs3 = pst3.executeQuery();
+		    		String query = "SELECT * FROM mydb.shoppingcart;";
+		    		pst3 = connection.prepareStatement(query);
+		    		rs3 = pst3.executeQuery();
 		    		table2.setModel(DbUtils.resultSetToTableModel(rs3));
-					
+		    		
 				} catch (Exception ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();
