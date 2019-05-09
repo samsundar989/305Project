@@ -172,7 +172,7 @@ public class Purchase extends JDialog {
 		    // Add seller ID to list for each item in shopping Cart
 		    for(int i=0;i<items.size();i++) {
 		    Statement statement = connection.createStatement();
-			String query = "SELECT * FROM mydb.item WHERE ArticleID="+items.get(i)+";";
+			String query = "SELECT * FROM mydb.item WHERE ISBN="+items.get(i)+";";
 			System.out.println(query);
 		    ResultSet inventory = statement.executeQuery(query);
 		    while(inventory.next()) {
