@@ -172,14 +172,15 @@ public class Purchase extends JDialog {
 		    // Add seller ID to list for each item in shopping Cart
 		    for(int i=0;i<items.size();i++) {
 		    Statement statement = connection.createStatement();
-			String query = "SELECT FROM mydb.item WHERE ArticleID="+items.get(i);
-		    ResultSet inventory = stmt.executeQuery(sql);
+			String query = "SELECT * FROM mydb.item WHERE ArticleID="+items.get(i)+";";
+			System.out.println(query);
+		    ResultSet inventory = statement.executeQuery(query);
 		    while(inventory.next()) {
 		    	sellers.add(inventory.getString(4));
 		    }
 		    } 
-			JLabel lblPassword = new JLabel("Amount Charged: "+totalCharge);
-			lblPassword.setBounds(17, 438, 185, 29);
+			JLabel lblPassword = new JLabel("Amount Charged: $"+totalCharge);
+			lblPassword.setBounds(17, 438, 300, 29);
 			lblPassword.setForeground(new Color(240, 255, 255));
 			lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 24));
 			contentPanel.add(lblPassword);
@@ -204,7 +205,7 @@ public class Purchase extends JDialog {
 							check = connection.createStatement();
 							String num = "SELECT * FROM mydb.makesa ORDER BY ConfirmationNumber DESC LIMIT 1;";
 							ResultSet confirmation = check.executeQuery(num);
-							if(confirmation.equals(null)) {
+							if(confirmation.next()==false) {
 								confirmationNum=1;
 							}
 							else {
@@ -214,16 +215,18 @@ public class Purchase extends JDialog {
 							
 						    // TODO: For each item in shopping cart, add to Makes A and to Payment
 							for(int i=0;i<items.size();i++) {
-							makesA = connection.createStatement();
-							String sql = "INSERT INTO mydb.makesa" +
-									" VALUES ("+totalPrices.get(i)+", "+confirmationNum+", "+customerID+", "+sellers.get(i)+");";
-						    makesA.executeUpdate(sql);
+								payment = connection.createStatement();
+							    String pay = "INSERT INTO mydb.payment" +
+										" VALUES ("+confirmationNum+", "+totalPrices.get(i)+");";
+							    payment.executeUpdate(pay);
+							    System.out.println(sellers.get(i));
+								makesA = connection.createStatement();
+								String sql = "INSERT INTO mydb.makesa" +
+										" VALUES ("+totalPrices.get(i)+", "+confirmationNum+", "+customerID+", "+sellers.get(i)+");";
+							    makesA.executeUpdate(sql);
 						    
-						    payment = connection.createStatement();
-						    String pay = "INSERT INTO mydb.payment" +
-									" VALUES ("+confirmationNum+", "+totalPrices.get(i)+");";
-						    payment.executeUpdate(pay);
-						    confirmationNum++;
+						    
+							    confirmationNum++;
 							}
 							
 							dispose();
