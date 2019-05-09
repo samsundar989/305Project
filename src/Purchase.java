@@ -204,6 +204,7 @@ public class Purchase extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						Statement payment;
 						Statement check;
+						Statement delete;
 						try {    
 							int confirmationNum =0;
 							// To generate ConfirmationNumber
@@ -227,6 +228,11 @@ public class Purchase extends JDialog {
 										" VALUES ("+customer+", "+sellers.get(i)+", "+confirmationNum+");";
 							    payment.executeUpdate(pay);
 							}
+							
+							delete = connection.createStatement();
+							String toDelete = "DELETE FROM mydb.shoppingcart WHERE CustomerID="+customer+";";
+							delete.executeUpdate(toDelete);
+							
 							
 							dispose();
 						} catch (SQLException | FileNotFoundException e1) {
