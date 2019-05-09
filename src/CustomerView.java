@@ -257,7 +257,48 @@ public class CustomerView extends JFrame {
 		
 		tabbedPane.add("Shopping Cart",p2); 
 		JPanel p3=new JPanel();
+		p3.setBackground(new Color(0, 1, 32));
+		p3.setForeground(new Color(0, 1, 32));
 		tabbedPane.add("Orders",p3); 
+		
+		String query3 = "select * from mydb.orders";
+		PreparedStatement pst3 = connection.prepareStatement(query3);
+		ResultSet rs3 = pst3.executeQuery();
+		
+		JTable table3 = new JTable();
+		table3.setModel(DbUtils.resultSetToTableModel(rs3));
+		JScrollPane scrollPane3 = new JScrollPane();
+		scrollPane3.setBounds(0, 109, 1220, 402);
+		scrollPane3.setOpaque(false);
+		scrollPane3.setViewportView(table3);
+		
+		table3.setOpaque(false);
+		((DefaultTableCellRenderer)table3.getDefaultRenderer(Object.class)).setOpaque(false);
+		
+		table3.setFont(new Font("Tahoma", Font.BOLD, 22));
+		table3.setForeground(Color.white);
+		
+		table3.setSelectionForeground(new Color(1, 159, 254));
+		
+		table3.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
+		
+		table3.setRowHeight(30);
+		
+		scrollPane3.setOpaque(false);
+		scrollPane3.getViewport().setOpaque(false);
+		p3.setLayout(null);
+		p3.add(scrollPane3);
+		
+		JLabel label3 = new JLabel("Search");
+		label3.setForeground(Color.WHITE);
+		label3.setFont(new Font("Tahoma", Font.BOLD, 22));
+		label3.setBounds(25, 16, 129, 20);
+		p3.add(label3);
+		
+		textField = RowFilterUtil.createRowFilter(table);//JTextField();
+		textField.setBounds(25, 52, 146, 26);
+		p3.add(textField);
+		textField.setColumns(10);
 		
 		contentPane.add(tabbedPane);
 		
