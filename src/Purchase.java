@@ -218,7 +218,6 @@ public class Purchase extends JDialog {
 							    String pay = "INSERT INTO mydb.orders" +
 										" VALUES ("+customerID+", "+sellers.get(i)+", "+confirmationNum+");";
 							    payment.executeUpdate(pay);
-							    confirmationNum++;
 							}
 							
 							dispose();
