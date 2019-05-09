@@ -112,6 +112,16 @@ public class CustomerView extends JFrame {
 		p1.add(textField);
 		textField.setColumns(10);
 		
+		
+		String id = "";
+		
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			id = sc.next(); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		//TODO Add to Shopping Cart 
 		JButton btnAddToShopping = new JButton("Add To Shopping Cart");
 		btnAddToShopping.setFont(new Font("Tahoma", Font.PLAIN, 24));
@@ -128,7 +138,7 @@ public class CustomerView extends JFrame {
 					}else {
 						PrintWriter out = new PrintWriter ("review_data.txt");
 						out.print(table.getValueAt(table.getSelectedRow(), 0)+" "+
-								(table.getValueAt(table.getSelectedRow(), 3)));
+								(table.getValueAt(table.getSelectedRow(), 3) +" "));
 						out.close();
 						Review rd = new Review();
 						rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -150,14 +160,7 @@ public class CustomerView extends JFrame {
 		p2.setBackground(new Color(0, 1, 32));
 		p2.setForeground(new Color(0, 1, 32));
 		
-		String id = "";
 		
-		try {
-			Scanner sc = new Scanner(new File("username_info.txt"));
-			id = sc.next(); 
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
 		
 		String query2 = "select * from mydb.shoppingcart ";
 		query2 += "where CustomerID=" + id;
@@ -327,7 +330,6 @@ public class CustomerView extends JFrame {
 					String price = ""+ table.getValueAt(table.getSelectedRow(), 2);
 					BigDecimal bd = (BigDecimal) table.getValueAt(table.getSelectedRow(), 2);
 					double cost = bd.doubleValue();
-					System.out.println(cost);
 					double incCost = 2*cost;
 					String sellerID = ""+ table.getValueAt(table.getSelectedRow(), 3);
 					
@@ -338,7 +340,6 @@ public class CustomerView extends JFrame {
 							+ " VALUES ("+isbn+","+1+","+price+","+price+", "+customerID+")";
 					query += "on duplicate key update TotalPrice=TotalPrice+" +price 
 							+ " , Quantity=Quantity+1";
-					System.out.println(query);
 					PreparedStatement pst = connection.prepareStatement(query);
 					
 					Statement statement = connection.createStatement();

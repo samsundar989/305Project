@@ -88,12 +88,53 @@ public class Review extends JDialog {
 		PreparedStatement pst = connection.prepareStatement(query);
 		ResultSet rs = pst.executeQuery();
 		
+		JButton btnAddReview = new JButton("Add Review");
+		btnAddReview.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		btnAddReview.setBounds(305, 40, 300, 36);
+		panel.add(btnAddReview);
+		
+		// Functionality for Add Review button
+		btnAddReview.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ReviewDialog dialog = new ReviewDialog();
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
+//					Statement stmt = connection.createStatement();
+//					String sql = "INSERT INTO mydb.shoppingcart";
+//					
+//				    stmt.executeUpdate(sql);
+//				    int id = 0;
+//				    try {
+//						Scanner sc = new Scanner(new File("username_info.txt"));
+//						id = sc.nextInt(); 
+//					}catch(Exception ex) {
+//						ex.printStackTrace();
+//					}
+//				    
+//				    String querys = "select * from mydb.shoppingcart ";
+//					querys += "where CustomerID=" + id;
+//					PreparedStatement pst = connection.prepareStatement(querys);
+//					ResultSet rs = pst.executeQuery();
+////					table2.setModel(DbUtils.resultSetToTableModel(rs));
+				    
+				} catch (Exception ex) {
+					if(ex instanceof SQLException){
+						ex.printStackTrace();
+					}
+					System.out.println("Choose table and row");
+				}
+			}
+		});
+		
+		
 		JTable table = new JTable();
 		table.setModel(DbUtils.resultSetToTableModel(rs));
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 109, 1220, 402);
 		scrollPane.setOpaque(false);
 		scrollPane.setViewportView(table);
+		
 		
 		table.setOpaque(false);
 		((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
