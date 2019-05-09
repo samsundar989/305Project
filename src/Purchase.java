@@ -215,7 +215,7 @@ public class Purchase extends JDialog {
 								confirmationNum=1;
 							}
 							else {
-								confirmationNum = confirmation.getInt(2)+1;
+								confirmationNum = confirmation.getInt(3)+1;
 							}
 							Scanner scanner = new Scanner(new File("username_info.txt"));
 							String customer = scanner.next();
@@ -228,10 +228,6 @@ public class Purchase extends JDialog {
 										" VALUES ("+customer+", "+sellers.get(i)+", "+confirmationNum+");";
 							    payment.executeUpdate(pay);
 							}
-							
-							delete = connection.createStatement();
-							String toDelete = "DELETE FROM mydb.shoppingcart WHERE CustomerID="+customer+";";
-							delete.executeUpdate(toDelete);
 							
 							
 							dispose();
