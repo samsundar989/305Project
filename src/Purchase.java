@@ -194,17 +194,15 @@ public class Purchase extends JDialog {
 				JButton okButton = new JButton("Buy");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Statement makesA;
 						Statement payment;
 						Statement check;
-						Statement sends;
 						try {    
 							Scanner sc = new Scanner(new File("username_info.txt"));
 							String customerID = sc.next();
 							int confirmationNum =0;
 							// To generate ConfirmationNumber
 							check = connection.createStatement();
-							String num = "SELECT * FROM mydb.makesa ORDER BY ConfirmationNumber DESC LIMIT 1;";
+							String num = "SELECT * FROM mydb.orders ORDER BY ConfirmationNumber DESC LIMIT 1;";
 							ResultSet confirmation = check.executeQuery(num);
 							if(confirmation.next()==false) {
 								confirmationNum=1;
@@ -217,19 +215,9 @@ public class Purchase extends JDialog {
 						    // TODO: For each item in shopping cart, add to Makes A and to Payment
 							for(int i=0;i<items.size();i++) {
 								payment = connection.createStatement();
-							    String pay = "INSERT INTO mydb.payment" +
-										" VALUES ("+confirmationNum+", "+totalPrices.get(i)+");";
+							    String pay = "INSERT INTO mydb.orders" +
+										" VALUES ("+customerID+", "+sellers.get(i)+", "+confirmationNum+");";
 							    payment.executeUpdate(pay);
-							    System.out.println(sellers.get(i));
-								makesA = connection.createStatement();
-								String sql = "INSERT INTO mydb.makesa" +
-										" VALUES ("+totalPrices.get(i)+", "+confirmationNum+", "+customerID+", "+sellers.get(i)+");";
-							    makesA.executeUpdate(sql);
-							    
-							    sends = connection.createStatement();
-							    String toSend = "INSERT INTO mydb.sendsout" +
-										" VALUES ("+confirmationNum+", "+sellers.get(i)+", "+customerID+");";
-							    sends.executeQuery(toSend);
 							    confirmationNum++;
 							}
 							
