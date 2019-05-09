@@ -269,8 +269,16 @@ public class SellerView extends JFrame {
 		JPanel p2 = new JPanel();
 		tabbedPane.add("Orders",p2); 
 		
-		query = "select * from mydb.sendsout;";
-		//query += "where sellerID = (the seller ID of current User);";
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			int id = sc.nextInt();
+			query = "select * from mydb.orders ";
+			query += "where SellerID=" + id;
+
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
 		pst = connection.prepareStatement(query);
 		rs = pst.executeQuery();
 		

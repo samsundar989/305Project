@@ -164,18 +164,7 @@ public class CustomerView extends JFrame {
 		
 		//TODO Add to Shopping Cart 
 		JButton btnAddToShopping = new JButton("Add To Shopping Cart");
-		btnAddToShopping.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {	
-				try {
-
-					
-				}catch(Exception t) {
-					t.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error");
-				}
-				
-			}
-		});
+		
 		btnAddToShopping.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnAddToShopping.setBounds(305, 40, 300, 36);
 		p1.add(btnAddToShopping);
@@ -316,7 +305,17 @@ public class CustomerView extends JFrame {
 		p3.setForeground(new Color(0, 1, 32));
 		tabbedPane.add("Orders",p3); 
 		
-		String query3 = "select * from mydb.makesa";
+		int idNum = 0;
+		
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			idNum = sc.nextInt();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		String query3 = "select * from mydb.orders";
+		query3 += " where CustomerID=" + idNum;
 		PreparedStatement pst3 = connection.prepareStatement(query3);
 		ResultSet rs3 = pst3.executeQuery();
 		
@@ -379,24 +378,20 @@ public class CustomerView extends JFrame {
 			public void actionPerformed(ActionEvent e) {	
 				try {
 					String isbn = ""+table.getValueAt(table.getSelectedRow(), 0);
-					String price = ""+ table.getValueAt(table.getSelectedRow(), 2);
-					BigDecimal bd = (BigDecimal) table.getValueAt(table.getSelectedRow(), 2);
-					double cost = bd.doubleValue();
-					double incCost = 2*cost;
-					String sellerID = ""+ table.getValueAt(table.getSelectedRow(), 3);
+					String price = (String) table.getValueAt(table.getSelectedRow(), 2);
+					int sellerID = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 3));
 					
 					Scanner sc = new Scanner(new File("username_info.txt"));
-					String customerID = sc.next();
+					int customerID = sc.nextInt();
 					
 					String query = "INSERT INTO mydb.shoppingcart"
-							+ " VALUES ("+isbn+","+1+","+price+","+price+", "+customerID+")";
-					query += "on duplicate key update TotalPrice=TotalPrice+" +price 
-							+ " , Quantity=Quantity+1";
+							+ " VALUES ("+isbn+","+price+","+customerID+","+sellerID+")";
+					query += "on duplicate key update price=" + price;
 					PreparedStatement pst = connection.prepareStatement(query);
 					
 					Statement statement = connection.createStatement();
 					statement.executeUpdate(query);
-			
+					
 					ResultSet rs3 = pst2.executeQuery();
 					table2.setModel(DbUtils.resultSetToTableModel(rs3));
 				} catch(Exception t) {
