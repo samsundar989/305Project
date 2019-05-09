@@ -1,9 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
@@ -17,6 +20,7 @@ import javax.swing.*;
 import java.awt.Font;
 import java.awt.Panel;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.GridBagConstraints;
 
 public class CustomerView extends JFrame {
@@ -73,11 +77,47 @@ public class CustomerView extends JFrame {
 		ResultSet rs = pst.executeQuery();
 		
 		JTable table = new JTable();
-		table.setModel(DbUtils.resultSetToTableModel(rs));
+//		table.setModel(DbUtils.resultSetToTableModel(rs));
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 109, 1220, 402);
 		scrollPane.setOpaque(false);
 		scrollPane.setViewportView(table);
+		
+		DefaultTableModel model_request = ((DefaultTableModel) DbUtils.resultSetToTableModel(rs));
+		DefaultTableModel model = new DefaultTableModel(){
+            @Override
+            public Class<?> getColumnClass(int column) {
+                if (column==4) return ImageIcon.class;
+                return String.class;
+            }
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               //all cells false
+               return false;
+            }
+        };
+        model.addColumn("ISBN");
+        model.addColumn("Genre");
+        model.addColumn("Price");
+        model.addColumn("SellerID");
+        model.addColumn("Picture");
+		for(int i=0; i<model_request.getRowCount(); i++) {
+			Vector v = new Vector();
+			for(int j=0; j<model.getColumnCount(); j++) {
+				v.add(null);
+			}
+			model.addRow(v);
+			for(int j=0; j<model_request.getColumnCount(); j++) {
+				model.setValueAt(model_request.getValueAt(i, j).toString(), i, j);
+			}
+			ImageIcon icon = new ImageIcon("untitled.png");
+			Image img = icon.getImage();
+			Image newimg = img.getScaledInstance(60, 60,  java.awt.Image.SCALE_SMOOTH);
+			icon = new ImageIcon(newimg);
+			model.setValueAt(icon, i, model.getColumnCount()-1);
+		}
+		table.setModel(model);
+
 		
 		table.setOpaque(false);
 		((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
@@ -89,7 +129,7 @@ public class CustomerView extends JFrame {
 		
 		table.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
 		
-		table.setRowHeight(30);
+		table.setRowHeight(70);
 		
 		scrollPane.setOpaque(false);
 		scrollPane.getViewport().setOpaque(false);
@@ -112,18 +152,7 @@ public class CustomerView extends JFrame {
 		btnAddToShopping.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
 				try {
-//					int selectedRow = table.getSelectedRow();
-//					String isbn = ""+table.getValueAt(table.getSelectedRow(), 0);
-//					String title = (String) table.getValueAt(table.getSelectedRow(), 1);
-//					String author = (String) table.getValueAt(table.getSelectedRow(), 2);
-//					String price = (String) table.getValueAt(table.getSelectedRow(), 4);
-//					
-//					String query = "INSERT INTO mydb.shoppingcart(ISBN, Title, Author, Price, Quantity, CustomerID)"
-//							+ " VALUES ("+isbn+", '"+title+"', '"+author+"', "+price+", '"+1+"', '112');";
-//					PreparedStatement pst = connection.prepareStatement(query);
-//					ResultSet rs = pst.executeQuery();
-//					rs.close();
-//					pst.close();
+
 					
 				}catch(Exception t) {
 					t.printStackTrace();
