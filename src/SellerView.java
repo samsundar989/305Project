@@ -313,8 +313,16 @@ public class SellerView extends JFrame {
 		JPanel p3 = new JPanel();
 		tabbedPane.add("Shipments",p3); 
 		
-		query = "select * from mydb.shipment;";
-		//query += "where sellerID = (the seller ID of current User);";
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			int id = sc.nextInt();
+			query = "select * from mydb.shipment ";
+			query += "where SellerID=" + id;
+
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+
 		pst = connection.prepareStatement(query);
 		rs = pst.executeQuery();
 		
@@ -334,13 +342,7 @@ public class SellerView extends JFrame {
 		shipmentsTable.setSelectionForeground(new Color(1, 159, 254));
 		
 		shipmentsTable.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
-		shipmentsTable.getColumnModel().getColumn(0).setHeaderValue("Tracking#");
-		shipmentsTable.getColumnModel().getColumn(1).setHeaderValue("Shipment");
-		shipmentsTable.getColumnModel().getColumn(2).setHeaderValue("Address");
-		shipmentsTable.getColumnModel().getColumn(3).setHeaderValue("Type");
-		shipmentsTable.getColumnModel().getColumn(4).setHeaderValue("Cost");
-		shipmentsTable.getTableHeader().setResizingAllowed(true);
-		
+
 		shipmentsTable.setRowHeight(30);
 		
 		p3.setBackground(new Color(0,1,32));
