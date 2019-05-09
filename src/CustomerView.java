@@ -9,12 +9,17 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.awt.event.ActionEvent;
 import java.sql.*;
+import java.util.Scanner;
 import java.util.Vector;
 import javax.swing.*;
 import java.awt.Font;
@@ -147,8 +152,19 @@ public class CustomerView extends JFrame {
 		p1.add(textField);
 		textField.setColumns(10);
 		
+		
+		String id = "";
+		
+		try {
+			Scanner sc = new Scanner(new File("username_info.txt"));
+			id = sc.next(); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		//TODO Add to Shopping Cart 
 		JButton btnAddToShopping = new JButton("Add To Shopping Cart");
+<<<<<<< HEAD
 		btnAddToShopping.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
 				try {
@@ -161,6 +177,8 @@ public class CustomerView extends JFrame {
 				
 			}
 		});
+=======
+>>>>>>> 835c9ba9ee699347d731c065413a8f7a9fb43a50
 		btnAddToShopping.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnAddToShopping.setBounds(305, 40, 300, 36);
 		p1.add(btnAddToShopping);
@@ -175,7 +193,7 @@ public class CustomerView extends JFrame {
 					}else {
 						PrintWriter out = new PrintWriter ("review_data.txt");
 						out.print(table.getValueAt(table.getSelectedRow(), 0)+" "+
-								(table.getValueAt(table.getSelectedRow(), 3)));
+								(table.getValueAt(table.getSelectedRow(), 3) +" "));
 						out.close();
 						Review rd = new Review();
 						rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -198,16 +216,18 @@ public class CustomerView extends JFrame {
 		p2.setForeground(new Color(0, 1, 32));
 		
 		
-		String query2 = "select * from mydb.shoppingcart";
+		
+		String query2 = "select * from mydb.shoppingcart ";
+		query2 += "where CustomerID=" + id;
 		PreparedStatement pst2 = connection.prepareStatement(query2);
 		ResultSet rs2 = pst2.executeQuery();
 		
 		JTable table2 = new JTable();
 		table2.setModel(DbUtils.resultSetToTableModel(rs2));
-		JScrollPane scrollPane2 = new JScrollPane();
-		scrollPane2.setBounds(0, 109, 1220, 402);
-		scrollPane2.setOpaque(false);
-		scrollPane2.setViewportView(table2);
+		JScrollPane cartScrollPane = new JScrollPane();
+		cartScrollPane.setBounds(0, 109, 1220, 402);
+		cartScrollPane.setOpaque(false);
+		cartScrollPane.setViewportView(table2);
 		
 		table2.setOpaque(false);
 		((DefaultTableCellRenderer)table2.getDefaultRenderer(Object.class)).setOpaque(false);
@@ -221,10 +241,10 @@ public class CustomerView extends JFrame {
 		
 		table2.setRowHeight(30);
 		
-		scrollPane2.setOpaque(false);
-		scrollPane2.getViewport().setOpaque(false);
+		cartScrollPane.setOpaque(false);
+		cartScrollPane.getViewport().setOpaque(false);
 		p2.setLayout(null);
-		p2.add(scrollPane2);
+		p2.add(cartScrollPane);
 		
 		JLabel label2 = new JLabel("Search");
 		label2.setForeground(Color.WHITE);
@@ -240,7 +260,7 @@ public class CustomerView extends JFrame {
 		JButton btnPurchase = new JButton("Complete Purchase");
 		btnPurchase.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
+				try {	
 					Purchase rd = new Purchase();
 					rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		            rd.setVisible(true);
@@ -258,8 +278,36 @@ public class CustomerView extends JFrame {
 		JButton btnRemove = new JButton("Remove from shopping cart");
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					Statement stmt = connection.createStatement();
+					String sql = "DELETE FROM mydb.shoppingcart";
+					sql+=" WHERE ";
+					sql+=table2.getColumnName(0)+" = '"+table2.getValueAt(table2.getSelectedRow(), 0)+"'";
+
+				    stmt.executeUpdate(sql);
+				    int id = 0;
+				    try {
+						Scanner sc = new Scanner(new File("username_info.txt"));
+						id = sc.nextInt(); 
+					}catch(Exception ex) {
+						ex.printStackTrace();
+					}
+				    
+				    String querys = "select * from mydb.shoppingcart ";
+					querys += "where CustomerID=" + id;
+					PreparedStatement pst = connection.prepareStatement(querys);
+					ResultSet rs = pst.executeQuery();
+					table2.setModel(DbUtils.resultSetToTableModel(rs));
+				    
+				} catch (Exception ex) {
+					if(ex instanceof SQLException){
+						ex.printStackTrace();
+					}
+					System.out.println("Choose table and row");
+				}
 			}
 		});
+
 		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnRemove.setBounds(286, 40, 364, 36);
 		p2.add(btnRemove);
@@ -267,7 +315,48 @@ public class CustomerView extends JFrame {
 		
 		tabbedPane.add("Shopping Cart",p2); 
 		JPanel p3=new JPanel();
+		p3.setBackground(new Color(0, 1, 32));
+		p3.setForeground(new Color(0, 1, 32));
 		tabbedPane.add("Orders",p3); 
+		
+		String query3 = "select * from mydb.makesa";
+		PreparedStatement pst3 = connection.prepareStatement(query3);
+		ResultSet rs3 = pst3.executeQuery();
+		
+		JTable table3 = new JTable();
+		table3.setModel(DbUtils.resultSetToTableModel(rs3));
+		JScrollPane scrollPane3 = new JScrollPane();
+		scrollPane3.setBounds(0, 109, 1220, 402);
+		scrollPane3.setOpaque(false);
+		scrollPane3.setViewportView(table3);
+		
+		table3.setOpaque(false);
+		((DefaultTableCellRenderer)table3.getDefaultRenderer(Object.class)).setOpaque(false);
+		
+		table3.setFont(new Font("Tahoma", Font.BOLD, 22));
+		table3.setForeground(Color.white);
+		
+		table3.setSelectionForeground(new Color(1, 159, 254));
+		
+		table3.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
+		
+		table3.setRowHeight(30);
+		
+		scrollPane3.setOpaque(false);
+		scrollPane3.getViewport().setOpaque(false);
+		p3.setLayout(null);
+		p3.add(scrollPane3);
+		
+		JLabel label3 = new JLabel("Search");
+		label3.setForeground(Color.WHITE);
+		label3.setFont(new Font("Tahoma", Font.BOLD, 22));
+		label3.setBounds(25, 16, 129, 20);
+		p3.add(label3);
+		
+		textField = RowFilterUtil.createRowFilter(table);//JTextField();
+		textField.setBounds(25, 52, 146, 26);
+		p3.add(textField);
+		textField.setColumns(10);
 		
 		contentPane.add(tabbedPane);
 		
@@ -289,6 +378,36 @@ public class CustomerView extends JFrame {
 		button.setBounds(1183, 16, 157, 29);
 		contentPane.add(button);
 		
+		btnAddToShopping.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				try {
+					String isbn = ""+table.getValueAt(table.getSelectedRow(), 0);
+					String price = ""+ table.getValueAt(table.getSelectedRow(), 2);
+					BigDecimal bd = (BigDecimal) table.getValueAt(table.getSelectedRow(), 2);
+					double cost = bd.doubleValue();
+					double incCost = 2*cost;
+					String sellerID = ""+ table.getValueAt(table.getSelectedRow(), 3);
+					
+					Scanner sc = new Scanner(new File("username_info.txt"));
+					String customerID = sc.next();
+					
+					String query = "INSERT INTO mydb.shoppingcart"
+							+ " VALUES ("+isbn+","+1+","+price+","+price+", "+customerID+")";
+					query += "on duplicate key update TotalPrice=TotalPrice+" +price 
+							+ " , Quantity=Quantity+1";
+					PreparedStatement pst = connection.prepareStatement(query);
+					
+					Statement statement = connection.createStatement();
+					statement.executeUpdate(query);
+			
+					ResultSet rs3 = pst2.executeQuery();
+					table2.setModel(DbUtils.resultSetToTableModel(rs3));
+				} catch(Exception t) {
+					t.printStackTrace();
+				}
+				
+			}
+		});
 		
 	}
 
