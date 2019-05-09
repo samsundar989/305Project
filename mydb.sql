@@ -34,7 +34,7 @@ CREATE TABLE `Customer` (
 
 LOCK TABLES `Customer` WRITE;
 /*!40000 ALTER TABLE `Customer` DISABLE KEYS */;
-INSERT INTO `Customer` VALUES (111111),(444444);
+INSERT INTO `Customer` VALUES (111111),(111222),(111333),(111444),(111555);
 /*!40000 ALTER TABLE `Customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,37 +59,8 @@ CREATE TABLE `databaseuser` (
 
 LOCK TABLES `databaseuser` WRITE;
 /*!40000 ALTER TABLE `databaseuser` DISABLE KEYS */;
-INSERT INTO `databaseuser` VALUES ('111111','123','customer'),('111222','123','seller'),('111333','123','seller'),('111444','123','seller'),('333333','123','seller'),('admin','123','admin'),('seller3','123','seller');
+INSERT INTO `databaseuser` VALUES ('111111','123','customer'),('111222','123','customer'),('111333','123','customer'),('111444','123','customer'),('111555','123','customer'),('222111','123','seller'),('222222','123','seller'),('222333','123','seller'),('222444','123','seller'),('222555','123','seller'),('admin','123','admin');
 /*!40000 ALTER TABLE `databaseuser` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Inventory`
---
-
-DROP TABLE IF EXISTS `Inventory`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `Inventory` (
-  `ItemID` int(11) NOT NULL,
-  `ItemName` varchar(45) DEFAULT NULL,
-  `Price` int(11) DEFAULT NULL,
-  `Quantity` int(11) DEFAULT NULL,
-  `SellerID` int(11) NOT NULL,
-  PRIMARY KEY (`SellerID`,`ItemID`),
-  KEY `itemID_idx` (`ItemID`),
-  CONSTRAINT `inventory_sellerID` FOREIGN KEY (`SellerID`) REFERENCES `seller` (`SellerID`),
-  CONSTRAINT `itemID` FOREIGN KEY (`ItemID`) REFERENCES `item` (`ISBN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Inventory`
---
-
-LOCK TABLES `Inventory` WRITE;
-/*!40000 ALTER TABLE `Inventory` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -116,7 +87,7 @@ CREATE TABLE `Item` (
 
 LOCK TABLES `Item` WRITE;
 /*!40000 ALTER TABLE `Item` DISABLE KEYS */;
-INSERT INTO `Item` VALUES (23142,'fiction','4',111222),(65243,'real','2',111333);
+INSERT INTO `Item` VALUES (444000,'Poetry','9',222555),(444111,'Fiction','4',222111),(444222,'Action','5',222222),(444333,'Poetry','10',222333),(444444,'Children\'s','12',222444),(444555,'Horror','8',222555),(444666,'Science','16',222111),(444777,'Young Adult','11',222222),(444888,'Action','7',222333),(444999,'Fiction','5',222444);
 /*!40000 ALTER TABLE `Item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,6 +116,7 @@ CREATE TABLE `Orders` (
 
 LOCK TABLES `Orders` WRITE;
 /*!40000 ALTER TABLE `Orders` DISABLE KEYS */;
+INSERT INTO `Orders` VALUES (111111,222333,1),(111222,222444,2),(111111,222111,3),(111333,222444,4),(111444,222333,5);
 /*!40000 ALTER TABLE `Orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,6 +147,7 @@ CREATE TABLE `review` (
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
+INSERT INTO `review` VALUES (444000,111111,222555,'Average book.','3'),(444000,111222,222555,'Poor writing.','1'),(444111,111333,222111,'Great quality writing.','5'),(444222,111444,222222,'Generic plot.','3'),(444333,111333,222333,'Beautiful poetry.','4'),(444444,111444,222444,'Below average illustration.','2'),(444555,111222,222555,'Not as scary as I would\'ve liked.','1'),(444666,111555,222111,'Solid information, hard read.','3'),(444777,111111,222222,'Good book.','2'),(444888,111222,222333,'Ok.','3'),(444999,111333,222444,'Beautifully written.','5');
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -199,7 +172,7 @@ CREATE TABLE `Seller` (
 
 LOCK TABLES `Seller` WRITE;
 /*!40000 ALTER TABLE `Seller` DISABLE KEYS */;
-INSERT INTO `Seller` VALUES (111111,NULL,NULL),(111222,NULL,NULL),(111333,NULL,NULL);
+INSERT INTO `Seller` VALUES (222111,'','1'),(222222,'','4'),(222333,'','5'),(222444,'','2'),(222555,'','3');
 /*!40000 ALTER TABLE `Seller` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -212,7 +185,6 @@ DROP TABLE IF EXISTS `Shipment`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `Shipment` (
   `TrackingNumber` int(11) NOT NULL,
-  `ShipmentDetails` varchar(45) DEFAULT NULL,
   `DeliveryAddress` varchar(45) DEFAULT NULL,
   `TypeOfShipment` varchar(45) DEFAULT NULL,
   `ShipmentCharge` int(11) DEFAULT NULL,
@@ -232,34 +204,8 @@ CREATE TABLE `Shipment` (
 
 LOCK TABLES `Shipment` WRITE;
 /*!40000 ALTER TABLE `Shipment` DISABLE KEYS */;
-INSERT INTO `Shipment` VALUES (432142,'periodt','129 moison rd N','express',33,111222,444444);
+INSERT INTO `Shipment` VALUES (1,'129 Moison Rd','Express',32,111222,222333),(2,'246 Main St','Standard',45,111333,222111),(3,'300 Circle Rd','2-Day',14,111444,222222),(4,'52 Town Rd','Standard',20,111111,222444);
 /*!40000 ALTER TABLE `Shipment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Shipment/Delivery`
---
-
-DROP TABLE IF EXISTS `Shipment/Delivery`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `Shipment/Delivery` (
-  `TrackingNumber` int(11) NOT NULL,
-  `ShipmentDetails` varchar(45) DEFAULT NULL,
-  `DeliveryAddress` varchar(45) DEFAULT NULL,
-  `TypeOfShipment` varchar(45) DEFAULT NULL,
-  `ShipmentCharge` int(11) DEFAULT NULL,
-  PRIMARY KEY (`TrackingNumber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Shipment/Delivery`
---
-
-LOCK TABLES `Shipment/Delivery` WRITE;
-/*!40000 ALTER TABLE `Shipment/Delivery` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Shipment/Delivery` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -289,6 +235,7 @@ CREATE TABLE `ShoppingCart` (
 
 LOCK TABLES `ShoppingCart` WRITE;
 /*!40000 ALTER TABLE `ShoppingCart` DISABLE KEYS */;
+INSERT INTO `ShoppingCart` VALUES (23142,'4',111111,111222),(65243,'2',111111,111333);
 /*!40000 ALTER TABLE `ShoppingCart` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -301,4 +248,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-09 17:49:53
+-- Dump completed on 2019-05-09 18:36:09
