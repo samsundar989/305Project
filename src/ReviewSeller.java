@@ -94,6 +94,7 @@ public class ReviewSeller extends JDialog {
 		ResultSet rs = pst.executeQuery();
 		
 		JTable table = new JTable();
+		table.setAutoCreateRowSorter(true);
 		table.setModel(DbUtils.resultSetToTableModel(rs));
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 109, 1220, 402);

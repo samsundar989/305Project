@@ -12,6 +12,8 @@ import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -21,12 +23,15 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
@@ -88,53 +93,14 @@ public class Review extends JDialog {
 		PreparedStatement pst = connection.prepareStatement(query);
 		ResultSet rs = pst.executeQuery();
 		
-		JButton btnAddReview = new JButton("Add Review");
-		btnAddReview.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		btnAddReview.setBounds(305, 40, 300, 36);
-		panel.add(btnAddReview);
-		
-		// Functionality for Add Review button
-		btnAddReview.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					ReviewDialog dialog = new ReviewDialog();
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-//					Statement stmt = connection.createStatement();
-//					String sql = "INSERT INTO mydb.shoppingcart";
-//					
-//				    stmt.executeUpdate(sql);
-//				    int id = 0;
-//				    try {
-//						Scanner sc = new Scanner(new File("username_info.txt"));
-//						id = sc.nextInt(); 
-//					}catch(Exception ex) {
-//						ex.printStackTrace();
-//					}
-//				    
-//				    String querys = "select * from mydb.shoppingcart ";
-//					querys += "where CustomerID=" + id;
-//					PreparedStatement pst = connection.prepareStatement(querys);
-//					ResultSet rs = pst.executeQuery();
-////					table2.setModel(DbUtils.resultSetToTableModel(rs));
-				    
-				} catch (Exception ex) {
-					if(ex instanceof SQLException){
-						ex.printStackTrace();
-					}
-					System.out.println("Choose table and row");
-				}
-			}
-		});
-		
-		
 		JTable table = new JTable();
+		table.getTableHeader().setResizingAllowed(true);
+		table.setAutoCreateRowSorter(true);
 		table.setModel(DbUtils.resultSetToTableModel(rs));
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 109, 1220, 402);
 		scrollPane.setOpaque(false);
 		scrollPane.setViewportView(table);
-		
 		
 		table.setOpaque(false);
 		((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
@@ -152,6 +118,62 @@ public class Review extends JDialog {
 		scrollPane.getViewport().setOpaque(false);
 		panel.setLayout(null);
 		panel.add(scrollPane);
+		
+		JButton btnAddReview = new JButton("Add Review");
+		btnAddReview.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					DefaultTableModel m = (DefaultTableModel) table.getModel();
+					Vector row = new Vector();
+					row.add(isbn);
+					row.add("Enter data");
+					row.add(sellerID);
+					for(int i = 3; i < table.getColumnCount(); i++) {
+						row.add("Enter data");
+					}
+					m.addRow(row);
+					m.fireTableDataChanged();
+					
+				}catch (Exception ex) {
+					
+				}
+			}
+		});
+		btnAddReview.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		btnAddReview.setBounds(25, 29, 194, 36);
+		panel.add(btnAddReview);
+		
+		JButton btnSaveReview = new JButton("Save Review");
+		btnSaveReview.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Statement stmt = connection.createStatement();
+				    String sql = "INSERT INTO mydb.Review";
+					sql+=" VALUES ('"+table.getValueAt(table.getSelectedRow(), 0)+"'";
+					for(int i = 1; i < table.getColumnCount(); i++) {
+						sql+=", '"+table.getValueAt(table.getSelectedRow(), i)+"'";
+					}
+					sql+=");";
+					stmt.executeUpdate(sql);
+					table.clearSelection();
+				}catch (Exception ex) {
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					ex.printStackTrace(pw);
+					String sStackTrace = sw.toString(); 
+					sStackTrace = sStackTrace.split("\n")[0];
+					JOptionPane.showMessageDialog(null, sStackTrace);
+					// remove selected row
+					DefaultTableModel m = (DefaultTableModel) table.getModel();
+					m.removeRow(table.getSelectedRow());
+					m.fireTableDataChanged();
+					table.clearSelection();
+				}
+			}
+		});
+		btnSaveReview.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		btnSaveReview.setBounds(234, 29, 177, 36);
+		panel.add(btnSaveReview);
 		
 		JLabel lblReviews = new JLabel("Reviews");
 		lblReviews.setOpaque(false);

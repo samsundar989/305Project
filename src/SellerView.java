@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 
@@ -104,6 +105,7 @@ public class SellerView extends JFrame {
 		p1.add(itemsScrollPane);
 		
 		JButton btnAddRow = new JButton("Add Row");
+		btnAddRow.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnAddRow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -120,10 +122,11 @@ public class SellerView extends JFrame {
 				}
 			}
 		});
-		btnAddRow.setBounds(442, 40, 115, 29);
+		btnAddRow.setBounds(401, 40, 115, 29);
 		p1.add(btnAddRow);
 		
 		JButton btnSaveRow = new JButton("Save Row");
+		btnSaveRow.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnSaveRow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -151,10 +154,11 @@ public class SellerView extends JFrame {
 				}
 			}
 		});
-		btnSaveRow.setBounds(572, 40, 115, 29);
+		btnSaveRow.setBounds(531, 40, 155, 29);
 		p1.add(btnSaveRow);
 		
 		JButton btnSeeR = new JButton("See Reviews");
+		btnSeeR.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnSeeR.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -185,6 +189,7 @@ public class SellerView extends JFrame {
 		p1.add(lblSearch);
 		
 		JButton btnRemove = new JButton("Remove");
+		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -241,6 +246,7 @@ public class SellerView extends JFrame {
 		p1.add(btnRemove);
 		
 		JButton btnShowOnlyMy = new JButton("Show Only My Items");
+		btnShowOnlyMy.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnShowOnlyMy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -257,7 +263,7 @@ public class SellerView extends JFrame {
 				}
 			}
 		});
-		btnShowOnlyMy.setBounds(923, 40, 207, 29);
+		btnShowOnlyMy.setBounds(923, 40, 251, 29);
 		p1.add(btnShowOnlyMy);
 		
 		JPanel p2 = new JPanel();
@@ -320,6 +326,12 @@ public class SellerView extends JFrame {
 		shipmentsTable.setSelectionForeground(new Color(1, 159, 254));
 		
 		shipmentsTable.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 28));
+		shipmentsTable.getColumnModel().getColumn(0).setHeaderValue("Tracking#");
+		shipmentsTable.getColumnModel().getColumn(1).setHeaderValue("Shipment");
+		shipmentsTable.getColumnModel().getColumn(2).setHeaderValue("Address");
+		shipmentsTable.getColumnModel().getColumn(3).setHeaderValue("Type");
+		shipmentsTable.getColumnModel().getColumn(4).setHeaderValue("Cost");
+		shipmentsTable.getTableHeader().setResizingAllowed(true);
 		
 		shipmentsTable.setRowHeight(30);
 		
