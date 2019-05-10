@@ -109,7 +109,7 @@ public class AdminView extends JFrame {
 		JComboBox comboBox = new JComboBox();
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		comboBox.setBounds(15, 38, 270, 35);
-		comboBox.addItem("employee");
+		comboBox.addItem("item");
 		comboBox.addItem("customer");
 		comboBox.addItem("seller");
 		comboBox.addItem("databaseuser");

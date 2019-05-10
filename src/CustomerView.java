@@ -244,31 +244,6 @@ public class CustomerView extends JFrame {
 		textField2.setColumns(10);
 		
 		JButton btnPurchase = new JButton("Complete Purchase");
-		btnPurchase.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {	
-					Purchase rd = new Purchase();
-					rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		            rd.setVisible(true);
-		            
-		            String id = "";
-		    		Scanner sc = new Scanner(new File("username_info.txt"));
-		    		id = sc.next(); 
-		    
-					String toDelete = "DELETE * FROM mydb.shoppingcart WHERE CustomerID="+id+";";
-		    		PreparedStatement pst3 = connection.prepareStatement(toDelete);
-		    		ResultSet rs3 = pst3.executeQuery();
-		    		String query = "SELECT * FROM mydb.shoppingcart;";
-		    		pst3 = connection.prepareStatement(query);
-		    		rs3 = pst3.executeQuery();
-		    		table2.setModel(DbUtils.resultSetToTableModel(rs3));
-		    		
-				} catch (Exception ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
-				}
-			}
-		});
 		btnPurchase.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnPurchase.setBounds(692, 40, 300, 36);
 		p2.add(btnPurchase);
@@ -410,6 +385,42 @@ public class CustomerView extends JFrame {
 					t.printStackTrace();
 				}
 				
+			}
+		});
+		
+		btnPurchase.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {	
+					Purchase rd = new Purchase();
+					rd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		            rd.setVisible(true);
+		            
+		            int id = 0;
+		    		Scanner sc = new Scanner(new File("username_info.txt"));
+		    		id = sc.nextInt(); 
+		    		
+		    		
+					String toDelete = "DELETE FROM mydb.shoppingcart ";
+					toDelete += "where CustomerID=" + id;
+		    		PreparedStatement pst3 = connection.prepareStatement(toDelete);
+		    		pst3.executeUpdate();
+		    		
+					String query = "SELECT * FROM mydb.shoppingcart WHERE CustomerID=" + id;
+		    		PreparedStatement pst4 = connection.prepareStatement(query);
+		    		ResultSet rs3 = pst4.executeQuery();
+		    		
+		    		table2.setModel(DbUtils.resultSetToTableModel(rs3));
+		    		
+		    		String query2 = "SELECT * FROM mydb.orders WHERE CustomerID=" + id;
+		    		PreparedStatement pst5 = connection.prepareStatement(query2);
+		    		ResultSet rs4 = pst5.executeQuery();
+		    		
+		    		table3.setModel(DbUtils.resultSetToTableModel(rs4));
+		    		
+				} catch (Exception ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
 			}
 		});
 		
