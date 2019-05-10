@@ -336,6 +336,30 @@ public class CustomerView extends JFrame {
 		label3.setBounds(25, 16, 129, 20);
 		p3.add(label3);
 		
+		JButton btnRefresh = new JButton("Refresh Orders");
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Scanner sc = new Scanner(new File("username_info.txt"));
+					int id = sc.nextInt();
+					
+					String query2 = "SELECT * FROM mydb.orders WHERE CustomerID=" + id;
+		    		PreparedStatement pst5 = connection.prepareStatement(query2);
+		    		ResultSet rs4 = pst5.executeQuery();
+		    		
+		    		table3.setModel(DbUtils.resultSetToTableModel(rs4));
+					
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					
+				}
+			}
+		});
+
+		btnRefresh.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		btnRefresh.setBounds(286, 40, 364, 36);
+		p3.add(btnRefresh);
+		
 		textField = RowFilterUtil.createRowFilter(table);//JTextField();
 		textField.setBounds(25, 52, 146, 26);
 		p3.add(textField);
@@ -411,11 +435,7 @@ public class CustomerView extends JFrame {
 		    		
 		    		table2.setModel(DbUtils.resultSetToTableModel(rs3));
 		    		
-		    		String query2 = "SELECT * FROM mydb.orders WHERE CustomerID=" + id;
-		    		PreparedStatement pst5 = connection.prepareStatement(query2);
-		    		ResultSet rs4 = pst5.executeQuery();
 		    		
-		    		table3.setModel(DbUtils.resultSetToTableModel(rs4));
 		    		
 				} catch (Exception ex) {
 					// TODO Auto-generated catch block
